@@ -16,9 +16,13 @@ if (e != null) e.addEventListener("click", btnClick);
 const f = document.getElementById("six");
 if (f != null) f.addEventListener("click", btnClick);
 
-const colorChangerMenu = new ColorChangerMenu();
+const g = document.getElementById("seven");
+if (g != null) g.addEventListener("click", btnClick);
 
-function btnClick(e: MouseEvent)
+
+function btnClick(this: HTMLElement, e: MouseEvent)
 {
-    colorChangerMenu.openMenu(e);
+    const rect = {x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5}
+    const colorPicker = new ColorPicker();
+    colorPicker.openMenu_AroundRect(rect, "up", "left");
 }

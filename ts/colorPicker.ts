@@ -53,8 +53,8 @@ class ColorPicker
 
     constructor()
     {
-        const topMenuHeight = 17;
-        const bottomMenuHeight = 25;
+        const topMenuHeight = 4;
+        const bottomMenuHeight = 22;
 
         this.menuWindow = document.createElement("div");
         this.menuWindow.style.backgroundColor = "lightgray";
@@ -77,46 +77,11 @@ class ColorPicker
             this.menuTop.style.display = "block";
             this.menuWindow.appendChild(this.menuTop);
 
-            let backgrounCloseButton: string;
-            {
-                const canva = document.createElement("canvas");
-                canva.width = topMenuHeight - 2;
-                canva.height = topMenuHeight - 2;
-                const ctx = canva.getContext("2d");
-                if (ctx != null)
-                {
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(0, 0, canva.width, canva.height);
-                    ctx.fillStyle = "black";
-                    const a = 4;
-                    ctx.lineWidth = 2;
-                    ctx.beginPath;
-                    ctx.moveTo(a, a);
-                    ctx.lineTo(canva.width - a, canva.height - a);
-                    ctx.moveTo(canva.width - a, a);
-                    ctx.lineTo(a, canva.height - a);
-                    ctx.stroke();
-                }
-                backgrounCloseButton = 'url(' + canva.toDataURL("image/png") + ')';
-            }
-
-            this.closeButton = document.createElement("div");
-            this.closeButton.style.borderRadius = "7px";
-            // this.closeButton.style.backgroundColor = "red";
-            this.closeButton.style.backgroundImage = backgrounCloseButton;
-            this.closeButton.style.width = topMenuHeight - 2 + "px";
-            this.closeButton.style.height = topMenuHeight - 2 + "px";
-            this.closeButton.style.display = "block";
-            this.closeButton.style.marginLeft = "auto";
-            this.closeButton.style.marginRight = "2px";
-            this.closeButton.style.marginTop = "2px";
-            this.closeButton.style.cursor = "pointer";
-            this.menuTop.appendChild(this.closeButton);
         }
 
         {
-            const canvaWidth = 180;
-            const canvaHeight = 110;
+            const canvaWidth = 184;
+            const canvaHeight = 120;
             this.cursorX = canvaWidth - 5;
             // const canvaWidth = 760;
             // const canvaHeight = 700;
@@ -152,15 +117,15 @@ class ColorPicker
             this.cursor.height = canvaHeight;
             this.cursor.style.display = "block";
             this.cursor.style.position = "absolute";
-            this.cursor.style.top = "18px";
-            this.cursor.style.left = "5px";
+            this.cursor.style.top = topMenuHeight + "px";
+            this.cursor.style.left = "3px";
             this.menu.appendChild(this.cursor);
 
             this.curColorDiv = document.createElement("div");
             this.curColorDiv.style.backgroundColor = this.getColor();
             // this.curColorDiv.style.backgroundColor = "lightblue";
             this.curColorDiv.style.borderRadius = "0 0 5px 5px";
-            this.curColorDiv.style.width = "180px";
+            this.curColorDiv.style.width = canvaWidth + "px";
             this.curColorDiv.style.height = "15px";
             this.curColorDiv.style.display = "block";
             this.curColorDiv.style.marginLeft = "auto";
@@ -226,6 +191,7 @@ class ColorPicker
                 textH.style.display = "inline-block";
                 textH.innerText = "H:";
                 textH.htmlFor = "inputH";
+                textH.style.userSelect = "none";
                 divForInputsH.appendChild(textH);
 
                 this.inputH = document.createElement("input");
@@ -244,6 +210,7 @@ class ColorPicker
                 textS.style.display = "inline-block";
                 textS.innerText = "S:";
                 textS.htmlFor = "inputS";
+                textS.style.userSelect = "none";
                 divForInputsS.appendChild(textS);
 
                 this.inputS = document.createElement("input");
@@ -262,6 +229,7 @@ class ColorPicker
                 textL.style.display = "inline-block";
                 textL.innerText = "L:";
                 textL.htmlFor = "inputL";
+                textL.style.userSelect = "none";
                 divForInputsL.appendChild(textL);
 
                 this.inputL = document.createElement("input");
@@ -282,20 +250,67 @@ class ColorPicker
             this.menuBottom.style.display = "block";
             this.menuWindow.appendChild(this.menuBottom);
 
-            const okButtonHeight = 18;
+            const buttonDIV = document.createElement("div");
+            // this.menuTop.style.backgroundColor = "darkgray";
+            buttonDIV.style.width = "80px";
+            buttonDIV.style.height = bottomMenuHeight + "px";
+            buttonDIV.style.display = "block";
+            buttonDIV.style.marginLeft = this.width - 80 + 8 + "px";
+            this.menuBottom.appendChild(buttonDIV);
+
+
+            const okButtonHeight = 17;
+            let backgrounCloseButton: string;
+            {
+                const canva = document.createElement("canvas");
+                canva.width = 24;
+                canva.height = okButtonHeight;
+                const ctx = canva.getContext("2d");
+                if (ctx != null)
+                {
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(0, 0, canva.width, canva.height);
+                    ctx.fillStyle = "black";
+                    const a = 4;
+                    const shiftY = 1;
+                    const shiftX = 1;
+                    const width = 17;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath;
+                    ctx.moveTo(a + shiftX, a + shiftY);
+                    ctx.lineTo(width - a + shiftX, width - a + shiftY);
+                    ctx.moveTo(width - a + shiftX, a + shiftY);
+                    ctx.lineTo(a + shiftX, width - a + shiftY);
+                    ctx.stroke();
+                }
+                backgrounCloseButton = 'url(' + canva.toDataURL("image/png") + ')';
+            }
+
+            this.closeButton = document.createElement("div");
+            this.closeButton.style.borderRadius = "7px 0px 0px 7px";
+            this.closeButton.style.backgroundImage = backgrounCloseButton;
+            this.closeButton.style.border = "1px solid black";
+            this.closeButton.style.borderRightWidth = "0px";
+            this.closeButton.style.width = "18px";
+            this.closeButton.style.height = okButtonHeight + "px";
+            this.closeButton.style.display = "table-cell";
+            this.closeButton.style.cursor = "pointer";
+            buttonDIV.appendChild(this.closeButton);
+
             this.okButton = document.createElement("div");
-            this.okButton.style.borderRadius = "7px";
+            this.okButton.style.borderRadius = "0px 7px 7px 0px";
             this.okButton.style.backgroundColor = "green";
-            this.okButton.style.width = "40px";
+            this.okButton.style.border = "1px solid black";
+            this.okButton.style.borderLeftWidth = "0px";
+            this.okButton.style.width = "42px";
             this.okButton.style.height = okButtonHeight + "px";
-            this.okButton.style.display = "block";
-            this.okButton.style.marginLeft = "auto";
-            this.okButton.style.marginTop = bottomMenuHeight - okButtonHeight - 4 + "px";
-            this.okButton.style.marginRight = "2px";
+            this.okButton.style.display = "table-cell";
             this.okButton.style.cursor = "pointer";
-            this.okButton.style.textAlign = "center";
+            this.okButton.style.textAlign = "left";
+            this.okButton.style.paddingLeft = "8px";
+            this.okButton.style.marginTop = "8px";
             this.okButton.innerText = "OK";
-            this.menuBottom.appendChild(this.okButton);
+            buttonDIV.appendChild(this.okButton);
         }
 
         this.multiplyX = this.canva.width / 100 / this.segWidth;

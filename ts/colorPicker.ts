@@ -369,6 +369,7 @@ class ColorPicker
             document.body.appendChild(this.menuWindow);
             this.firstClick = true;
             document.addEventListener("click", this.clickHandler);
+            this.closeButton.addEventListener("click", this.closeHandler);
             window.addEventListener("resize", this.closeHandler);
         }
     }
@@ -379,6 +380,7 @@ class ColorPicker
             this.isOpen = false;
             this.menuWindow.parentElement?.removeChild(this.menuWindow);
             document.removeEventListener("click", this.clickHandler);
+            this.closeButton.removeEventListener("click", this.closeHandler);
             window.removeEventListener("resize", this.closeHandler);
         }
     }

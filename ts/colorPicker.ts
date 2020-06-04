@@ -32,10 +32,13 @@ class ColorPicker
     private Y = 0;
     private clickHandler = this.isInFocus.bind(this);
     private closeHandler = this.closeMenu.bind(this);
-    private chHColorRHandler = this.changeHColor.bind(this, true);
-    private chHColorIHandler = this.changeHColor.bind(this, false);
-    private chSColorHandler = this.changeSColor.bind(this);
-    private chLColorHandler = this.changeLColor.bind(this);
+    private buttonCancelHandler = this.buttonsClick.bind(this, "cancel");
+    private buttonOkHandler = this.buttonsClick.bind(this, "ok");
+    private colorHRHandler = this.inputs.bind(this, "colorHRange");
+    private colorHIHandler = this.inputs.bind(this, "colorH");
+    private colorSHandler = this.inputs.bind(this, "colorS");
+    private colorLHandler = this.inputs.bind(this, "colorL");
+    private colorChangedHandler = this.inputs.bind(this, "changed");
     private canvaUpHandler = this.canvaMouse.bind(this, "up");
     private canvaMoveHandler = this.canvaMouse.bind(this, "move");
     private canvaDownHandler = this.canvaMouse.bind(this, "down");
@@ -552,24 +555,74 @@ class ColorPicker
         this.inputL.value = `${l}`;
         this.curColorDiv.style.backgroundColor = this.getColor();
     }
+
+    
     private canvaMouse(state: "up" | "down" | "move", e: MouseEvent)
     {
         switch (state) {
             case "down":
                 this.colorIsChanging = true;
                 this.canvaClick(e);
+                console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 break;
             case "move":
                 if (this.colorIsChanging)
                 {
                     this.canvaClick(e);
+                    console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 }
                 break;
             case "up":
+                if (this.colorIsChanging)
+                {
+                    console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
+                }
                 this.colorIsChanging = false;
                 break;
         }
     }
+    private buttonsClick(button: "cancel" | "ok")
+    {
+        switch (button) {
+            case "cancel":
+                console.log("user press cancel button");
+                break;
+            case "ok":
+                console.log("user press ok button");
+                break;
+            default:
+                break;
+        }
+        this.closeMenu();
+    }
+    private inputs(input: "colorH" | "colorS" | "colorL" | "colorHRange" | "changed")
+    {
+        switch (input) {
+            case "colorHRange":
+                this.changeHColor(true);
+                break;
+            case "colorH":
+                this.changeHColor(false);
+                break;
+            case "colorS":
+                this.changeSColor();
+                break;
+            case "colorL":
+                this.changeLColor();
+                break;
+            default:
+                break;
+        }
+        if (input == "changed")
+        {
+            console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
+        }
+        else
+        {
+            console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
+        }
+    }
+
     private openMenu()
     {
         if (!this.isOpen)
@@ -577,17 +630,27 @@ class ColorPicker
             this.isOpen = true;
             document.body.appendChild(this.menuWindow);
             this.firstClick = true;
+
             document.addEventListener("click", this.clickHandler);
-            this.closeButton.addEventListener("click", this.closeHandler);
             window.addEventListener("resize", this.closeHandler);
-            this.rangeInputH.addEventListener("input", this.chHColorRHandler);
-            this.inputH.addEventListener("input", this.chHColorIHandler);
-            this.inputS.addEventListener("input", this.chSColorHandler);
-            this.inputL.addEventListener("input", this.chLColorHandler);
-            this.cursor.addEventListener("mouseup", this.canvaUpHandler);
+
+            this.closeButton.addEventListener("click", this.buttonCancelHandler);
+            this.okButton.addEventListener("click", this.buttonOkHandler);
+
+            this.rangeInputH.addEventListener("input", this.colorHRHandler);
+            this.inputH.addEventListener("input", this.colorHIHandler);
+            this.inputS.addEventListener("input", this.colorSHandler);
+            this.inputL.addEventListener("input", this.colorLHandler);
+            this.rangeInputH.addEventListener("change", this.colorChangedHandler);
+            this.inputH.addEventListener("change", this.colorChangedHandler);
+            this.inputS.addEventListener("change", this.colorChangedHandler);
+            this.inputL.addEventListener("change", this.colorChangedHandler);
+
             this.cursor.addEventListener("mousedown", this.canvaDownHandler);
             this.cursor.addEventListener("mousemove", this.canvaMoveHandler);
             document.addEventListener("mouseup", this.canvaUpHandler);
+
+            console.log("color picker open");
         }
     }
     private closeMenu()
@@ -597,16 +660,18 @@ class ColorPicker
             this.isOpen = false;
             this.menuWindow.parentElement?.removeChild(this.menuWindow);
             document.removeEventListener("click", this.clickHandler);
-            this.closeButton.removeEventListener("click", this.closeHandler);
+            this.closeButton.removeEventListener("click", this.buttonCancelHandler);
+            this.okButton.removeEventListener("click", this.buttonOkHandler);
             window.removeEventListener("resize", this.closeHandler);
-            this.rangeInputH.removeEventListener("input", this.chHColorRHandler);
-            this.inputH.removeEventListener("input", this.chHColorIHandler);
-            this.inputS.removeEventListener("input", this.chSColorHandler);
-            this.inputL.removeEventListener("input", this.chLColorHandler);
+            this.rangeInputH.removeEventListener("input", this.colorHRHandler);
+            this.inputH.removeEventListener("input", this.colorHIHandler);
+            this.inputS.removeEventListener("input", this.colorSHandler);
+            this.inputL.removeEventListener("input", this.colorLHandler);
             this.cursor.removeEventListener("mouseup", this.canvaUpHandler);
             this.cursor.removeEventListener("mousedown", this.canvaDownHandler);
             this.cursor.removeEventListener("mousemove", this.canvaMoveHandler);
             document.removeEventListener("mouseup", this.canvaUpHandler);
+            console.log("color picker closed");
         }
     }
     private isInFocus(e: MouseEvent)

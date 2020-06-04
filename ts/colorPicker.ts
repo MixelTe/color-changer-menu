@@ -11,6 +11,7 @@ class ColorPicker
 
     private menu: HTMLDivElement;
     private canva: HTMLCanvasElement;
+    private cursor: HTMLCanvasElement;
     private curColorDiv: HTMLDivElement;
     private rangeInputH: HTMLInputElement;
     private inputH: HTMLInputElement;
@@ -39,6 +40,9 @@ class ColorPicker
     private canvaMoveHandler = this.canvaMouse.bind(this, "move");
     private canvaDownHandler = this.canvaMouse.bind(this, "down");
     private ctx: CanvasRenderingContext2D;
+    private ctxCursor: CanvasRenderingContext2D;
+    private cursorX = 0;
+    private cursorY = 5;
     private firstClick = false;
     private isOpen = false;
     private colorIsChanging = false;
@@ -113,6 +117,7 @@ class ColorPicker
         {
             const canvaWidth = 180;
             const canvaHeight = 110;
+            this.cursorX = canvaWidth - 5;
             // const canvaWidth = 760;
             // const canvaHeight = 700;
             this.menu = document.createElement("div");
@@ -136,6 +141,20 @@ class ColorPicker
             this.canva.style.marginLeft = "auto";
             this.canva.style.marginRight = "auto";
             this.menu.appendChild(this.canva);
+
+            this.cursor = document.createElement("canvas");
+            this.cursor.style.border = "2px solid transparent";
+            this.cursor.style.boxSizing = "border-box";
+            this.cursor.style.borderRadius = "5px 5px 0px 0px";
+            this.cursor.style.width = canvaWidth + "px";
+            this.cursor.style.height = canvaHeight + "px";
+            this.cursor.width = canvaWidth;
+            this.cursor.height = canvaHeight;
+            this.cursor.style.display = "block";
+            this.cursor.style.position = "absolute";
+            this.cursor.style.top = "18px";
+            this.cursor.style.left = "5px";
+            this.menu.appendChild(this.cursor);
 
             this.curColorDiv = document.createElement("div");
             this.curColorDiv.style.backgroundColor = this.getColor();
@@ -283,6 +302,15 @@ class ColorPicker
         this.multiplyX_ = this.canva.width / 50 / this.segWidth;
         this.multiplyY = this.canva.height / 50 / this.segWidth;
 
+        const context2 = this.cursor.getContext("2d");
+        if (context2 != null)
+        {
+            this.ctxCursor = context2;
+        }
+        else
+        {
+            throw new Error("canvas2 not found");
+        }
         const context = this.canva.getContext("2d");
         if (context != null)
         {
@@ -415,10 +443,24 @@ class ColorPicker
                 this.ctx.fillRect(this.segWidth * x, this.segWidth * y, this.segWidth, this.segWidth);
             }
         }
+        this.drawCursor();
     }
     private getColor()
     {
         return `hsl(${this.colorH}, ${this.colorS}%, ${this.colorL}%)`;
+    }
+    private drawCursor()
+    {
+        this.ctxCursor.clearRect(0, 0, this.cursor.width, this.cursor.height);
+        this.ctxCursor.beginPath();
+        let newL = 0;
+        if (this.colorL < 30)
+        {
+            newL = 100;
+        }
+        this.ctxCursor.strokeStyle = `hsl(${this.colorH}, 0%, ${newL}%)`;
+        this.ctxCursor.arc(this.cursorX + 1, this.cursorY + 1, 5, 1, 20);
+        this.ctxCursor.stroke();
     }
     private changeHColor(rangeInput: boolean)
     {
@@ -478,6 +520,9 @@ class ColorPicker
     {
         let x = Math.abs(e.offsetX);
         let y = Math.abs(e.offsetY);
+        this.cursorX = x;
+        this.cursorY = y;
+        this.drawCursor();
 
         x = Math.floor(x / this.segWidth);
         y = Math.floor(y / this.segWidth);
@@ -524,9 +569,9 @@ class ColorPicker
             this.inputH.addEventListener("input", this.chHColorIHandler);
             this.inputS.addEventListener("input", this.chSColorHandler);
             this.inputL.addEventListener("input", this.chLColorHandler);
-            this.canva.addEventListener("mouseup", this.canvaUpHandler);
-            this.canva.addEventListener("mousedown", this.canvaDownHandler);
-            this.canva.addEventListener("mousemove", this.canvaMoveHandler);
+            this.cursor.addEventListener("mouseup", this.canvaUpHandler);
+            this.cursor.addEventListener("mousedown", this.canvaDownHandler);
+            this.cursor.addEventListener("mousemove", this.canvaMoveHandler);
             document.addEventListener("mouseup", this.canvaUpHandler);
         }
     }
@@ -543,9 +588,9 @@ class ColorPicker
             this.inputH.removeEventListener("input", this.chHColorIHandler);
             this.inputS.removeEventListener("input", this.chSColorHandler);
             this.inputL.removeEventListener("input", this.chLColorHandler);
-            this.canva.removeEventListener("mouseup", this.canvaUpHandler);
-            this.canva.removeEventListener("mousedown", this.canvaDownHandler);
-            this.canva.removeEventListener("mousemove", this.canvaMoveHandler);
+            this.cursor.removeEventListener("mouseup", this.canvaUpHandler);
+            this.cursor.removeEventListener("mousedown", this.canvaDownHandler);
+            this.cursor.removeEventListener("mousemove", this.canvaMoveHandler);
             document.removeEventListener("mouseup", this.canvaUpHandler);
         }
     }

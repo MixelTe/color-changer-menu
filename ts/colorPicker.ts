@@ -31,14 +31,17 @@ class ColorPicker
     private Y = 0;
     private clickHandler = this.isInFocus.bind(this);
     private closeHandler = this.closeMenu.bind(this);
-    private chHColorRHandler = () => {this.changeHColor(true)};
-    private chHColorIHandler = () => {this.changeHColor(false)};
+    private chHColorRHandler = this.changeHColor.bind(this, true);
+    private chHColorIHandler = this.changeHColor.bind(this, false);
     private chSColorHandler = this.changeSColor.bind(this);
     private chLColorHandler = this.changeLColor.bind(this);
-    private canvaClickHandler = this.canvaClick.bind(this);
+    private canvaUpHandler = this.canvaMouse.bind(this, "up");
+    private canvaMoveHandler = this.canvaMouse.bind(this, "move");
+    private canvaDownHandler = this.canvaMouse.bind(this, "down");
     private ctx: CanvasRenderingContext2D;
     private firstClick = false;
     private isOpen = false;
+    private colorIsChanging = false;
     private segWidth = 3;
     private colorH = 0;
     private colorS = 100;
@@ -489,6 +492,24 @@ class ColorPicker
         this.inputL.value = `${l}`;
         this.curColorDiv.style.backgroundColor = this.getColor();
     }
+    private canvaMouse(state: "up" | "down" | "move", e: MouseEvent)
+    {
+        switch (state) {
+            case "down":
+                this.colorIsChanging = true;
+                this.canvaClick(e);
+                break;
+            case "move":
+                if (this.colorIsChanging)
+                {
+                    this.canvaClick(e);
+                }
+                break;
+            case "up":
+                this.colorIsChanging = false;
+                break;
+        }
+    }
     private openMenu()
     {
         if (!this.isOpen)
@@ -503,7 +524,10 @@ class ColorPicker
             this.inputH.addEventListener("input", this.chHColorIHandler);
             this.inputS.addEventListener("input", this.chSColorHandler);
             this.inputL.addEventListener("input", this.chLColorHandler);
-            this.canva.addEventListener("click", this.canvaClickHandler);
+            this.canva.addEventListener("mouseup", this.canvaUpHandler);
+            this.canva.addEventListener("mousedown", this.canvaDownHandler);
+            this.canva.addEventListener("mousemove", this.canvaMoveHandler);
+            document.addEventListener("mouseup", this.canvaUpHandler);
         }
     }
     private closeMenu()
@@ -519,7 +543,10 @@ class ColorPicker
             this.inputH.removeEventListener("input", this.chHColorIHandler);
             this.inputS.removeEventListener("input", this.chSColorHandler);
             this.inputL.removeEventListener("input", this.chLColorHandler);
-            this.canva.removeEventListener("click", this.canvaClickHandler);
+            this.canva.removeEventListener("mouseup", this.canvaUpHandler);
+            this.canva.removeEventListener("mousedown", this.canvaDownHandler);
+            this.canva.removeEventListener("mousemove", this.canvaMoveHandler);
+            document.removeEventListener("mouseup", this.canvaUpHandler);
         }
     }
     private isInFocus(e: MouseEvent)

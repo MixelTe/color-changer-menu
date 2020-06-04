@@ -13,7 +13,9 @@ class ColorPicker
     private X = 0;
     private Y = 0;
     private clickHandler = this.isInFocus.bind(this);
+    private closeHandler = this.closeMenu.bind(this);
     private firstClick = false;
+    private isOpen = false;
 
     constructor()
     {
@@ -32,7 +34,7 @@ class ColorPicker
 
         this.menuTop = document.createElement("div");
         this.menuTop.style.backgroundColor = "lightgray";
-        this.menuTop.style.width = "190px";
+        this.menuTop.style.width = "100%";
         this.menuTop.style.height = "120px";
         this.menuTop.style.display = "block";
         this.menuTop.style.marginTop = "10px";
@@ -54,7 +56,7 @@ class ColorPicker
 
         this.menuBelow = document.createElement("div");
         this.menuBelow.style.backgroundColor = "lightgray";
-        this.menuBelow.style.width = "190px";
+        this.menuBelow.style.width = "100%";
         this.menuBelow.style.height = "100px";
         this.menuBelow.style.display = "block";
         this.menu.appendChild(this.menuBelow);
@@ -169,16 +171,26 @@ class ColorPicker
 
     private openMenu()
     {
-        document.body.appendChild(this.menu);
-        this.menu.style.display = "block";
-        this.firstClick = true;
-        document.addEventListener("click", this.clickHandler);
+        if (!this.isOpen)
+        {
+            this.isOpen = true;
+            document.body.appendChild(this.menu);
+            this.menu.style.display = "block";
+            this.firstClick = true;
+            document.addEventListener("click", this.clickHandler);
+            window.addEventListener("resize", this.closeHandler);
+        }
     }
     private closeMenu()
     {
-        this.menu.parentElement?.removeChild(this.menu);
-        this.menu.style.display = "none";
-        document.removeEventListener("click", this.clickHandler);
+        if (this.isOpen)
+        {
+            this.isOpen = false;
+            this.menu.parentElement?.removeChild(this.menu);
+            this.menu.style.display = "none";
+            document.removeEventListener("click", this.clickHandler);
+            window.removeEventListener("resize", this.closeHandler);
+        }
     }
     private isInFocus(e: MouseEvent)
     {

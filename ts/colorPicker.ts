@@ -28,12 +28,13 @@ class ColorPicker
     private closeHandler = this.closeMenu.bind(this);
     private firstClick = false;
     private isOpen = false;
+    private color = "hsl(0, 100%, 50%)"
 
     constructor()
     {
         const inputWidth = 25;
         const inputHeight = 16;
-        const topMenuHeight = 20;
+        const topMenuHeight = 17;
         const bottomMenuHeight = 25;
 
         this.menuWindow = document.createElement("div");
@@ -57,19 +58,40 @@ class ColorPicker
             this.menuTop.style.display = "block";
             this.menuWindow.appendChild(this.menuTop);
 
+            let backgrounCloseButton: string;
+            {
+                const canva = document.createElement("canvas");
+                canva.width = topMenuHeight - 2;
+                canva.height = topMenuHeight - 2;
+                const ctx = canva.getContext("2d");
+                if (ctx != null)
+                {
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(0, 0, canva.width, canva.height);
+                    ctx.fillStyle = "black";
+                    const a = 4;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath;
+                    ctx.moveTo(a, a);
+                    ctx.lineTo(canva.width - a, canva.height - a);
+                    ctx.moveTo(canva.width - a, a);
+                    ctx.lineTo(a, canva.height - a);
+                    ctx.stroke();
+                }
+                backgrounCloseButton = 'url(' + canva.toDataURL("image/png") + ')';
+            }
+
             this.closeButton = document.createElement("div");
             this.closeButton.style.borderRadius = "7px";
-            this.closeButton.style.backgroundColor = "red";
+            // this.closeButton.style.backgroundColor = "red";
+            this.closeButton.style.backgroundImage = backgrounCloseButton;
             this.closeButton.style.width = topMenuHeight - 2 + "px";
             this.closeButton.style.height = topMenuHeight - 2 + "px";
             this.closeButton.style.display = "block";
             this.closeButton.style.marginLeft = "auto";
-            this.closeButton.style.marginRight = "1px";
-            this.closeButton.style.marginTop = "1px";
+            this.closeButton.style.marginRight = "2px";
+            this.closeButton.style.marginTop = "2px";
             this.closeButton.style.cursor = "pointer";
-            this.closeButton.style.textAlign = "center";
-            this.closeButton.style.fontSize = "22px";
-            this.closeButton.innerText = "×";
             this.menuTop.appendChild(this.closeButton);
         }
 
@@ -95,7 +117,7 @@ class ColorPicker
             this.menu.appendChild(this.canva);
 
             this.curColorDiv = document.createElement("div");
-            this.curColorDiv.style.backgroundColor = "blue";
+            this.curColorDiv.style.backgroundColor = this.color;
             // this.curColorDiv.style.backgroundColor = "lightblue";
             this.curColorDiv.style.borderRadius = "0 0 5px 5px";
             this.curColorDiv.style.width = "180px";
@@ -105,15 +127,40 @@ class ColorPicker
             this.curColorDiv.style.marginRight = "auto";
             this.menu.appendChild(this.curColorDiv);
 
+
+            const rangeInputHWidth = 180;
+            const rangeInputHHeight = 25;
+            let backgrounRangeInput: string;
+            {
+                const canva = document.createElement("canvas");
+                canva.width = rangeInputHWidth;
+                canva.height = rangeInputHHeight;
+                const ctx = canva.getContext("2d");
+                if (ctx != null)
+                {
+                    const segWidth = 2;
+                    // const segWidth = rangeInputHWidth / 360;
+                    const multiply = rangeInputHWidth / 360 / segWidth;
+                    for (let i = 0; i < rangeInputHWidth / segWidth; i++)
+                    {
+                        ctx.fillStyle = `hsl(${i / multiply}, 100%, 50%)`;
+                        ctx?.fillRect(segWidth * i, 0, segWidth, rangeInputHHeight);
+                    }
+                }
+                backgrounRangeInput = 'url(' + canva.toDataURL("image/png") + ')';
+            }
             this.rangeInputH = document.createElement("input");
             this.rangeInputH.type = "range";
+            this.rangeInputH.min = "0";
+            this.rangeInputH.max = "360";
             this.rangeInputH.classList.toggle("ColorPickerHInput");
             this.rangeInputH.style.outline = "none";
             this.rangeInputH.style.webkitAppearance = "none";
-            this.rangeInputH.style.backgroundColor = "lightgreen";
+            // this.rangeInputH.style.backgroundColor = "lightgreen";
+            this.rangeInputH.style.backgroundImage = backgrounRangeInput;
             this.rangeInputH.style.borderRadius = "5px";
-            this.rangeInputH.style.width = "180px";
-            this.rangeInputH.style.height = "25px";
+            this.rangeInputH.style.width = rangeInputHWidth + "px";
+            this.rangeInputH.style.height = rangeInputHHeight + "px";
             this.rangeInputH.style.display = "block";
             this.rangeInputH.style.marginLeft = "auto";
             this.rangeInputH.style.marginRight = "auto";
@@ -147,24 +194,6 @@ class ColorPicker
                 divForInputsH.appendChild(this.inputH);
 
 
-                const divForInputsL = document.createElement("td");
-                divForInputs.appendChild(divForInputsL);
-
-                const textL = document.createElement("label");
-                textL.style.display = "inline-block";
-                textL.innerText = "L:";
-                textL.htmlFor = "inputL";
-                divForInputsL.appendChild(textL);
-
-                this.inputL = document.createElement("input");
-                this.inputL.style.display = "inline-block";
-                this.inputL.type = "text";
-                this.inputL.id = "inputL";
-                this.inputL.style.width = inputWidth + "px";
-                this.inputL.style.height = inputHeight + "px";
-                divForInputsL.appendChild(this.inputL);
-
-
                 const divForInputsS = document.createElement("td");
                 divForInputs.appendChild(divForInputsS);
 
@@ -181,6 +210,24 @@ class ColorPicker
                 this.inputS.style.width = inputWidth + "px";
                 this.inputS.style.height = inputHeight + "px";
                 divForInputsS.appendChild(this.inputS);
+
+
+                const divForInputsL = document.createElement("td");
+                divForInputs.appendChild(divForInputsL);
+
+                const textL = document.createElement("label");
+                textL.style.display = "inline-block";
+                textL.innerText = "L:";
+                textL.htmlFor = "inputL";
+                divForInputsL.appendChild(textL);
+
+                this.inputL = document.createElement("input");
+                this.inputL.style.display = "inline-block";
+                this.inputL.type = "text";
+                this.inputL.id = "inputL";
+                this.inputL.style.width = inputWidth + "px";
+                this.inputL.style.height = inputHeight + "px";
+                divForInputsL.appendChild(this.inputL);
             }
         }
 
@@ -197,11 +244,11 @@ class ColorPicker
             this.okButton.style.borderRadius = "7px";
             this.okButton.style.backgroundColor = "green";
             this.okButton.style.width = "40px";
-            this.okButton.style.height = okButtonHeight  + "px";
+            this.okButton.style.height = okButtonHeight + "px";
             this.okButton.style.display = "block";
             this.okButton.style.marginLeft = "auto";
-            this.okButton.style.marginTop = bottomMenuHeight - okButtonHeight - 3 + "px";
-            this.okButton.style.marginRight = "1px";
+            this.okButton.style.marginTop = bottomMenuHeight - okButtonHeight - 4 + "px";
+            this.okButton.style.marginRight = "2px";
             this.okButton.style.cursor = "pointer";
             this.okButton.style.textAlign = "center";
             this.okButton.innerText = "OK";
@@ -241,7 +288,8 @@ class ColorPicker
         if (typeof rect.y != "number") throw new Error(`rect.y parameter invalid. It must be number that mean upper left corner of rect. Your value: '${rect.y}'`);
         if (typeof rect.width != "number") throw new Error(`rect.width parameter invalid. It must be number. Your value: '${rect.width}'`);
         if (typeof rect.height != "number") throw new Error(`rect.height parameter invalid. It must be number. Your value: '${rect.height}'`);
-        switch (positionY) {
+        switch (positionY)
+        {
             case "up":
                 {
                     let newY = rect.y - this.height;
@@ -269,7 +317,8 @@ class ColorPicker
             default:
                 throw new Error(`positionY parameter invalid. It can be: 'up' or 'down'. Your value: '${positionY}'`);
         }
-        switch (positionX) {
+        switch (positionX)
+        {
             case "left":
                 {
                     let newX = rect.x;
@@ -284,7 +333,7 @@ class ColorPicker
 
             case "center":
                 {
-                    let newX = rect.x + rect.width/2 - this.width / 2;
+                    let newX = rect.x + rect.width / 2 - this.width / 2;
                     if (!strict)
                     {
                         newX = Math.max(Math.min(newX, document.body.offsetWidth - this.width), 0);

@@ -1,11 +1,6 @@
 # Color picker menu
 
-## How it works
-open it with mouse event
-
 ![](/docs/menu.png)
-
-to close, click outside the menu
 
 
 #
@@ -26,7 +21,7 @@ Add this style to html (optional)
             width: 10px;
             height: 25px;
             border-radius: 4px;
-            background: rgb(185, 255, 251);
+            background: rgb(85, 85, 85);
             cursor: pointer;
         }
     </style>

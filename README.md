@@ -17,6 +17,19 @@ Add import for script to html
     <script defer src="./colorPicker.js"></script>
     <!-- your code: -->
     <script defer src="./main.js"></script>
+```
+Add this style to html (optional)
+``` html
+    <style>
+        .ColorPickerHInput::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 25px;
+            border-radius: 4px;
+            background: rgb(185, 255, 251);
+            cursor: pointer;
+        }
+    </style>
 </head>
 ```
 Write code in your program to use it

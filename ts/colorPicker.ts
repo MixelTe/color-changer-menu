@@ -28,6 +28,8 @@ class ColorPicker
     private closeHandler = this.closeMenu.bind(this);
     private chHColorRHandler = () => {this.changeHColor(true)};
     private chHColorIHandler = () => {this.changeHColor(false)};
+    private chSColorHandler = this.changeSColor.bind(this);
+    private chLColorHandler = this.changeLColor.bind(this);
     private firstClick = false;
     private isOpen = false;
     private colorH = 0;
@@ -37,8 +39,6 @@ class ColorPicker
 
     constructor()
     {
-        const inputWidth = 25;
-        const inputHeight = 16;
         const topMenuHeight = 17;
         const bottomMenuHeight = 25;
 
@@ -179,6 +179,9 @@ class ColorPicker
 
 
             {
+                const inputWidth = 25;
+                const inputHeight = 16;
+
                 const divForInputs = document.createElement("table");
                 divForInputs.style.width = "90%";
                 divForInputs.style.height = "26px";
@@ -278,6 +281,8 @@ class ColorPicker
         }
         this.rangeInputH.value = `${this.colorH}`;
         this.inputH.value = `${this.colorH}`;
+        this.inputS.value = `${this.colorS}`;
+        this.inputL.value = `${this.colorL}`;
     }
     public openMenu_OnCursor(e: MouseEvent)
     {
@@ -417,7 +422,7 @@ class ColorPicker
         else
         {
             let value: number | string = parseInt(this.inputH.value);
-            if (typeof value == "number" && 0 <= value && value <= 360)
+            if (value - value == 0 && 0 <= value && value <= 360)
             {
                 this.colorH = value;
                 this.rangeInputH.value = `${value}`;
@@ -431,7 +436,34 @@ class ColorPicker
         }
         this.curColorDiv.style.backgroundColor = this.getColor();
     }
-
+    private changeSColor()
+    {
+        let value: number | string = parseInt(this.inputS.value);
+        if (value - value == 0 && 0 <= value && value <= 100)
+        {
+            this.colorS = value;
+        }
+        value = this.inputS.value;
+        if (value.length > 3)
+        {
+            this.inputS.value = value.slice(0, 3);
+        }
+        this.curColorDiv.style.backgroundColor = this.getColor();
+    }
+    private changeLColor()
+    {
+        let value: number | string = parseInt(this.inputL.value);
+        if (value - value == 0  && 0 <= value && value <= 100)
+        {
+            this.colorL = value;
+        }
+        value = this.inputL.value;
+        if (value.length > 3)
+        {
+            this.inputL.value = value.slice(0, 3);
+        }
+        this.curColorDiv.style.backgroundColor = this.getColor();
+    }
 
     private openMenu()
     {
@@ -445,6 +477,8 @@ class ColorPicker
             window.addEventListener("resize", this.closeHandler);
             this.rangeInputH.addEventListener("input", this.chHColorRHandler);
             this.inputH.addEventListener("input", this.chHColorIHandler);
+            this.inputS.addEventListener("input", this.chSColorHandler);
+            this.inputL.addEventListener("input", this.chLColorHandler);
         }
     }
     private closeMenu()
@@ -458,6 +492,8 @@ class ColorPicker
             window.removeEventListener("resize", this.closeHandler);
             this.rangeInputH.removeEventListener("input", this.chHColorRHandler);
             this.inputH.removeEventListener("input", this.chHColorIHandler);
+            this.inputS.removeEventListener("input", this.chSColorHandler);
+            this.inputL.removeEventListener("input", this.chLColorHandler);
         }
     }
     private isInFocus(e: MouseEvent)

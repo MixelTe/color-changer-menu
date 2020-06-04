@@ -26,6 +26,8 @@ class ColorPicker
     private Y = 0;
     private clickHandler = this.isInFocus.bind(this);
     private closeHandler = this.closeMenu.bind(this);
+    private chHColorRHandler = () => {this.changeHColor(true)};
+    private chHColorIHandler = () => {this.changeHColor(false)};
     private firstClick = false;
     private isOpen = false;
     private colorH = 0;
@@ -274,6 +276,8 @@ class ColorPicker
         {
             throw new Error("canvas not found");
         }
+        this.rangeInputH.value = `${this.colorH}`;
+        this.inputH.value = `${this.colorH}`;
     }
     public openMenu_OnCursor(e: MouseEvent)
     {
@@ -383,7 +387,7 @@ class ColorPicker
 
     private drawPalette()
     {
-        const segWidth = 2;
+        const segWidth = 3;
         const multiplyX = this.canva.width / 100 / segWidth;
         const multiplyX_ = this.canva.width / 50 / segWidth;
         const multiplyY = this.canva.height / 50 / segWidth;
@@ -401,6 +405,32 @@ class ColorPicker
     {
         return `hsl(${this.colorH}, ${this.colorS}%, ${this.colorL}%)`;
     }
+    private changeHColor(rangeInput: boolean)
+    {
+        if (rangeInput)
+        {
+            const value = parseInt(this.rangeInputH.value);
+            this.colorH = value;
+            this.inputH.value = `${value}`;
+            this.drawPalette();
+        }
+        else
+        {
+            let value: number | string = parseInt(this.inputH.value);
+            if (typeof value == "number" && 0 <= value && value <= 360)
+            {
+                this.colorH = value;
+                this.rangeInputH.value = `${value}`;
+                this.drawPalette();
+            }
+            value = this.inputH.value;
+            if (value.length > 3)
+            {
+                this.inputH.value = value.slice(0, 3);
+            }
+        }
+        this.curColorDiv.style.backgroundColor = this.getColor();
+    }
 
 
     private openMenu()
@@ -413,6 +443,8 @@ class ColorPicker
             document.addEventListener("click", this.clickHandler);
             this.closeButton.addEventListener("click", this.closeHandler);
             window.addEventListener("resize", this.closeHandler);
+            this.rangeInputH.addEventListener("input", this.chHColorRHandler);
+            this.inputH.addEventListener("input", this.chHColorIHandler);
         }
     }
     private closeMenu()
@@ -424,6 +456,8 @@ class ColorPicker
             document.removeEventListener("click", this.clickHandler);
             this.closeButton.removeEventListener("click", this.closeHandler);
             window.removeEventListener("resize", this.closeHandler);
+            this.rangeInputH.removeEventListener("input", this.chHColorRHandler);
+            this.inputH.removeEventListener("input", this.chHColorIHandler);
         }
     }
     private isInFocus(e: MouseEvent)

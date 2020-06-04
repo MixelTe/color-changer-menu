@@ -28,7 +28,10 @@ class ColorPicker
     private closeHandler = this.closeMenu.bind(this);
     private firstClick = false;
     private isOpen = false;
-    private color = "hsl(0, 100%, 50%)"
+    private colorH = 0;
+    private colorS = 100;
+    private colorL = 50;
+    private ctx: CanvasRenderingContext2D;
 
     constructor()
     {
@@ -96,6 +99,10 @@ class ColorPicker
         }
 
         {
+            const canvaWidth = 180;
+            const canvaHeight = 110;
+            // const canvaWidth = 760;
+            // const canvaHeight = 700;
             this.menu = document.createElement("div");
             this.menu.style.backgroundColor = "lightgray";
             this.menu.style.borderRadius = "5%";
@@ -109,15 +116,17 @@ class ColorPicker
             this.canva.style.border = "2px solid black";
             this.canva.style.boxSizing = "border-box";
             this.canva.style.borderRadius = "5px 5px 0px 0px";
-            this.canva.style.width = "180px";
-            this.canva.style.height = "110px";
+            this.canva.style.width = canvaWidth + "px";
+            this.canva.style.height = canvaHeight + "px";
+            this.canva.width = canvaWidth;
+            this.canva.height = canvaHeight;
             this.canva.style.display = "block";
             this.canva.style.marginLeft = "auto";
             this.canva.style.marginRight = "auto";
             this.menu.appendChild(this.canva);
 
             this.curColorDiv = document.createElement("div");
-            this.curColorDiv.style.backgroundColor = this.color;
+            this.curColorDiv.style.backgroundColor = this.getColor();
             // this.curColorDiv.style.backgroundColor = "lightblue";
             this.curColorDiv.style.borderRadius = "0 0 5px 5px";
             this.curColorDiv.style.width = "180px";
@@ -254,6 +263,17 @@ class ColorPicker
             this.okButton.innerText = "OK";
             this.menuBottom.appendChild(this.okButton);
         }
+
+        const context = this.canva.getContext("2d");
+        if (context != null)
+        {
+            this.ctx = context;
+            this.drawPalette();
+        }
+        else
+        {
+            throw new Error("canvas not found");
+        }
     }
     public openMenu_OnCursor(e: MouseEvent)
     {
@@ -358,6 +378,28 @@ class ColorPicker
             default:
                 throw new Error(`positionX parameter invalid. It can be: 'left', 'center' or 'right'. Your value: '${positionX}'`);
         }
+    }
+
+
+    private drawPalette()
+    {
+        const segWidth = 2;
+        const multiplyX = this.canva.width / 100 / segWidth;
+        const multiplyX_ = this.canva.width / 50 / segWidth;
+        const multiplyY = this.canva.height / 50 / segWidth;
+        for (let y = 0; y < this.canva.height / segWidth; y++)
+        {
+            for (let x = 0; x < this.canva.width / segWidth; x++)
+            {
+                const l = ((100 - x / multiplyX_) / 50) * (50 - y / multiplyY);
+                this.ctx.fillStyle = `hsl(${this.colorH}, ${x / multiplyX}%, ${l}%)`;
+                this.ctx.fillRect(segWidth * x, segWidth * y, segWidth, segWidth);
+            }
+        }
+    }
+    private getColor()
+    {
+        return `hsl(${this.colorH}, ${this.colorS}%, ${this.colorL}%)`;
     }
 
 

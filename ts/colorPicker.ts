@@ -20,6 +20,11 @@ class ColorPicker
     private menuBottom: HTMLDivElement;
     private okButton: HTMLDivElement;
 
+    private multiplyX: number;
+    private multiplyX_: number;
+    private multiplyY: number;
+
+
     private height = 230;
     private width = 190;
     private X = 0;
@@ -30,12 +35,14 @@ class ColorPicker
     private chHColorIHandler = () => {this.changeHColor(false)};
     private chSColorHandler = this.changeSColor.bind(this);
     private chLColorHandler = this.changeLColor.bind(this);
+    private canvaClickHandler = this.canvaClick.bind(this);
+    private ctx: CanvasRenderingContext2D;
     private firstClick = false;
     private isOpen = false;
+    private segWidth = 3;
     private colorH = 0;
     private colorS = 100;
     private colorL = 50;
-    private ctx: CanvasRenderingContext2D;
 
     constructor()
     {
@@ -269,6 +276,10 @@ class ColorPicker
             this.menuBottom.appendChild(this.okButton);
         }
 
+        this.multiplyX = this.canva.width / 100 / this.segWidth;
+        this.multiplyX_ = this.canva.width / 50 / this.segWidth;
+        this.multiplyY = this.canva.height / 50 / this.segWidth;
+
         const context = this.canva.getContext("2d");
         if (context != null)
         {
@@ -392,17 +403,13 @@ class ColorPicker
 
     private drawPalette()
     {
-        const segWidth = 3;
-        const multiplyX = this.canva.width / 100 / segWidth;
-        const multiplyX_ = this.canva.width / 50 / segWidth;
-        const multiplyY = this.canva.height / 50 / segWidth;
-        for (let y = 0; y < this.canva.height / segWidth; y++)
+        for (let y = 0; y < this.canva.height / this.segWidth; y++)
         {
-            for (let x = 0; x < this.canva.width / segWidth; x++)
+            for (let x = 0; x < this.canva.width / this.segWidth; x++)
             {
-                const l = ((100 - x / multiplyX_) / 50) * (50 - y / multiplyY);
-                this.ctx.fillStyle = `hsl(${this.colorH}, ${x / multiplyX}%, ${l}%)`;
-                this.ctx.fillRect(segWidth * x, segWidth * y, segWidth, segWidth);
+                const l = ((100 - x / this.multiplyX_) / 50) * (50 - y / this.multiplyY);
+                this.ctx.fillStyle = `hsl(${this.colorH}, ${x / this.multiplyX}%, ${l}%)`;
+                this.ctx.fillRect(this.segWidth * x, this.segWidth * y, this.segWidth, this.segWidth);
             }
         }
     }
@@ -464,7 +471,24 @@ class ColorPicker
         }
         this.curColorDiv.style.backgroundColor = this.getColor();
     }
+    private canvaClick(e: MouseEvent)
+    {
+        let x = Math.abs(e.offsetX);
+        let y = Math.abs(e.offsetY);
 
+        x = Math.floor(x / this.segWidth);
+        y = Math.floor(y / this.segWidth);
+
+        let s = x / this.multiplyX;
+        let l = ((100 - x / this.multiplyX_) / 50) * (50 - y / this.multiplyY);
+        s = Math.round(s);
+        l = Math.round(l);
+        this.colorS = s;
+        this.colorL = l;
+        this.inputS.value = `${s}`;
+        this.inputL.value = `${l}`;
+        this.curColorDiv.style.backgroundColor = this.getColor();
+    }
     private openMenu()
     {
         if (!this.isOpen)
@@ -479,6 +503,7 @@ class ColorPicker
             this.inputH.addEventListener("input", this.chHColorIHandler);
             this.inputS.addEventListener("input", this.chSColorHandler);
             this.inputL.addEventListener("input", this.chLColorHandler);
+            this.canva.addEventListener("click", this.canvaClickHandler);
         }
     }
     private closeMenu()
@@ -494,6 +519,7 @@ class ColorPicker
             this.inputH.removeEventListener("input", this.chHColorIHandler);
             this.inputS.removeEventListener("input", this.chSColorHandler);
             this.inputL.removeEventListener("input", this.chLColorHandler);
+            this.canva.removeEventListener("click", this.canvaClickHandler);
         }
     }
     private isInFocus(e: MouseEvent)

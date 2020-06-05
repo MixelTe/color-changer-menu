@@ -342,9 +342,11 @@ class ColorPicker
     }
     public styleColors(element: "buttonOk" | "buttonCancel" | "window" | "inputs", type: "background" | "font", value?: string)
     {
-        switch (element) {
+        switch (element)
+        {
             case "buttonOk":
-                switch (type) {
+                switch (type)
+                {
                     case "font":
                         if (value != null) this.okButton.style.color = value
                         else return this.okButton.style.color;
@@ -366,7 +368,7 @@ class ColorPicker
                             this.closeButton.style.color = value
                             this.closeButton.style.backgroundImage = this.drawCloseButton(this.closeButton.style.backgroundColor, this.closeButton.style.color);
                         }
-                        else{ return this.closeButton.style.color};
+                        else { return this.closeButton.style.color };
                         break;
                     case "background":
                         if (value != null)
@@ -374,14 +376,15 @@ class ColorPicker
                             this.closeButton.style.backgroundColor = value;
                             this.closeButton.style.backgroundImage = this.drawCloseButton(this.closeButton.style.backgroundColor, this.closeButton.style.color);
                         }
-                        else{ return this.closeButton.style.backgroundColor};
+                        else { return this.closeButton.style.backgroundColor };
                         break;
                     default:
                         throw new Error(`second argument value unvalid. It can be: 'font' or 'background'. Your value: '${type}'`);
                 }
                 break;
             case "window":
-                switch (type) {
+                switch (type)
+                {
                     case "font":
                         if (value != null) this.menuWindow.style.color = value
                         else return this.menuWindow.style.color;
@@ -395,7 +398,8 @@ class ColorPicker
                 }
                 break;
             case "inputs":
-                switch (type) {
+                switch (type)
+                {
                     case "font":
                         if (value != null)
                         {
@@ -424,7 +428,8 @@ class ColorPicker
     }
     public styleWindow(option: "roundCorners" | "pickedColorBackground" | "pickedColorBorder", value?: boolean)
     {
-        switch (option) {
+        switch (option)
+        {
             case "roundCorners":
                 if (typeof value == "boolean")
                 {
@@ -450,15 +455,15 @@ class ColorPicker
                         this.closeButton.style.borderRadius = "0";
                         this.okButton.style.borderRadius = "0";
                     }
-                } else {return this.rounded}
+                } else { return this.rounded }
                 break;
             case "pickedColorBackground":
                 if (typeof value == "boolean") this.changeBackground = value;
-                else {return this.changeBackground}
+                else { return this.changeBackground }
                 break;
             case "pickedColorBorder":
                 if (typeof value == "boolean") this.changeBorder = value;
-                else {return this.changeBorder}
+                else { return this.changeBorder }
                 break;
             default:
                 throw new Error(`first argument value unvalid. It can be: 'roundCorners', 'pickedColorBackground' or 'pickedColorBorder'. Your value: '${option}'`);
@@ -665,7 +670,7 @@ class ColorPicker
     private changeLColor()
     {
         let value = parseInt(this.inputL.value);
-        if (value - value == 0  && 0 <= value && value <= 100)
+        if (value - value == 0 && 0 <= value && value <= 100)
         {
             this.colorL = value;
             this.calculateNewCurCords();
@@ -727,7 +732,8 @@ class ColorPicker
 
     private canvaMouse(state: "up" | "down" | "move", e: MouseEvent)
     {
-        switch (state) {
+        switch (state)
+        {
             case "down":
                 this.colorIsChanging = true;
                 this.canvaClick(e);
@@ -754,7 +760,8 @@ class ColorPicker
     }
     private buttonsClick(button: "cancel" | "ok")
     {
-        switch (button) {
+        switch (button)
+        {
             case "cancel":
                 this.fireEvent("colorPicker-canceled");
                 // console.log("user press cancel button");
@@ -770,7 +777,8 @@ class ColorPicker
     }
     private inputs(input: "colorH" | "colorS" | "colorL" | "colorHRange" | "changed")
     {
-        switch (input) {
+        switch (input)
+        {
             case "colorHRange":
                 this.changeHColor(true);
                 break;
@@ -874,11 +882,6 @@ class ColorPicker
     }
     private clickIntersect(x: number, y: number)
     {
-        const f = this.isInFocus;
-        const d = document;
-        const e = <MouseEvent>{};
-        const args = [1];
-
         return (
             x > this.X &&
             x < this.X + this.width &&

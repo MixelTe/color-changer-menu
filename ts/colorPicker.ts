@@ -470,13 +470,15 @@ class ColorPicker
     private drawCursor()
     {
         this.ctxCursor.clearRect(0, 0, this.cursor.width, this.cursor.height);
+        this.ctxCursor.strokeStyle = `black`;
+        this.ctxCursor.lineWidth = 3;
         this.ctxCursor.beginPath();
-        let newL = 0;
-        if (this.colorL < 30)
-        {
-            newL = 100;
-        }
-        this.ctxCursor.strokeStyle = `hsl(${this.colorH}, 0%, ${newL}%)`;
+        this.ctxCursor.arc(this.cursorX + 1, this.cursorY + 1, 5, 1, 20);
+        this.ctxCursor.stroke();
+
+        this.ctxCursor.strokeStyle = `white`;
+        this.ctxCursor.lineWidth = 1;
+        this.ctxCursor.beginPath();
         this.ctxCursor.arc(this.cursorX + 1, this.cursorY + 1, 5, 1, 20);
         this.ctxCursor.stroke();
     }
@@ -556,7 +558,7 @@ class ColorPicker
         this.curColorDiv.style.backgroundColor = this.getColor();
     }
 
-    
+
     private canvaMouse(state: "up" | "down" | "move", e: MouseEvent)
     {
         switch (state) {

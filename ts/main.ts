@@ -19,10 +19,10 @@ if (f != null) f.addEventListener("click", btnClick);
 const g = document.getElementById("seven");
 if (g != null) g.addEventListener("click", btnClick);
 
+const colorPicker = new ColorPicker();
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
     const rect = {x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5}
-    const colorPicker = new ColorPicker();
     colorPicker.openMenu_AroundRect(rect, "up", "left");
 }

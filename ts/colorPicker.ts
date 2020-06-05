@@ -351,6 +351,7 @@ class ColorPicker
     }
     public openMenu_AroundRect(rect: Rect, positionY?: PosY, positionX?: PosX, strict?: boolean)
     {
+        this.firstClick = true;
         this.moveMenuAroundRect(rect, positionY, positionX, strict);
         this.openMenu();
     }

@@ -338,7 +338,7 @@ class ColorPicker
         this.displayColor();
         this.openMenu();
     }
-    public pickerStyleColors(element: "buttonOk" | "buttonCancel" | "window" | "inputs", type: "background" | "font", value?: string)
+    public styleColors(element: "buttonOk" | "buttonCancel" | "window" | "inputs", type: "background" | "font", value?: string)
     {
         switch (element) {
             case "buttonOk":
@@ -420,7 +420,7 @@ class ColorPicker
                 throw new Error(`first argument value unvalid. It can be: 'buttonOk', 'buttonCancel', 'window' or 'inputs'. Your value: '${element}'`);
         }
     }
-    public pickerStyleWindow(option: "roundCorners" | "pickedColorBackground" | "pickedColorBorder", value?: boolean)
+    public styleWindow(option: "roundCorners" | "pickedColorBackground" | "pickedColorBorder", value?: boolean)
     {
         switch (option) {
             case "roundCorners":
@@ -461,6 +461,35 @@ class ColorPicker
             default:
                 throw new Error(`first argument value unvalid. It can be: 'roundCorners', 'pickedColorBackground' or 'pickedColorBorder'. Your value: '${option}'`);
         }
+    }
+    public setColorHSL(h: number, s: number, l: number)
+    {
+        this.colorH = Math.max(Math.min(h, 360), 0);
+        this.colorS = Math.max(Math.min(s, 100), 0);
+        this.colorL = Math.max(Math.min(l, 100), 0);
+        this.rangeInputH.value = `${this.colorH}`
+        this.inputH.value = `${this.colorH}`
+        this.inputL.value = `${this.colorL}`
+        this.inputS.value = `${this.colorS}`
+        this.displayColor()
+        this.calculateNewCurCords()
+        this.drawPalette();
+        this.drawCursor();
+    }
+    public setColorRGB(r: number, g: number, b: number)
+    {
+        const hsl = this.RGBToHSL(r, g, b);
+        this.colorH = Math.max(Math.min(hsl[0], 360), 0);
+        this.colorS = Math.max(Math.min(hsl[1], 100), 0);
+        this.colorL = Math.max(Math.min(hsl[2], 100), 0);
+        this.rangeInputH.value = `${this.colorH}`
+        this.inputH.value = `${this.colorH}`
+        this.inputL.value = `${this.colorL}`
+        this.inputS.value = `${this.colorS}`
+        this.displayColor()
+        this.calculateNewCurCords()
+        this.drawPalette();
+        this.drawCursor();
     }
     private moveMenuToCursor(e: MouseEvent)
     {
@@ -669,7 +698,7 @@ class ColorPicker
         y = Math.min(Math.max(y, 2), this.canva.height - 2)
         this.cursorX = x;
         this.cursorY = y;
-        console.log(x, y);
+        // console.log(x, y);
     }
     private canvaClick(e: MouseEvent)
     {
@@ -870,6 +899,33 @@ class ColorPicker
             }
             return 'url(' + canva.toDataURL("image/png") + ')';
         }
+    }
+
+    private RGBToHSL(r: number, g: number, b: number)
+    {
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        let cmin = Math.min(r, g, b),
+            cmax = Math.max(r, g, b),
+            delta = cmax - cmin,
+            h = 0,
+            s = 0,
+            l = 0;
+        if (delta == 0)
+            h = 0;
+        else if (cmax == r) h = ((g - b) / delta) % 6;
+        else if (cmax == g) h = (b - r) / delta + 2;
+        else h = (r - g) / delta + 4;
+        h = Math.round(h * 60);
+        if (h < 0) h += 360;
+
+        l = (cmax + cmin) / 2;
+        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+        s = +(s * 100).toFixed(1);
+        l = +(l * 100).toFixed(1);
+
+        return [h, s, l];
     }
 }
 interface Rect

@@ -20,8 +20,9 @@ const g = document.getElementById("seven");
 if (g != null) g.addEventListener("click", btnClick);
 
 const colorPicker = new ColorPicker();
-// colorPicker.pickerStyleColors("inputs", "background", "rgb(100, 100, 100)");
-// colorPicker.pickerStyleWindow("pickedColorBorder", true);
+// colorPicker.styleColors("inputs", "background", "rgb(100, 100, 100)");
+// colorPicker.styleWindow("pickedColorBorder", true);
+// colorPicker.setColorHSL(200, 100, 50);
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {

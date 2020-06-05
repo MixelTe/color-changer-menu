@@ -45,7 +45,7 @@ class ColorPicker
     private ctx: CanvasRenderingContext2D;
     private ctxCursor: CanvasRenderingContext2D;
     private cursorX = 0;
-    private cursorY = 5;
+    private cursorY = 0;
     private firstClick = false;
     private isOpen = false;
     private colorIsChanging = false;
@@ -85,7 +85,6 @@ class ColorPicker
         {
             const canvaWidth = 184;
             const canvaHeight = 120;
-            this.cursorX = canvaWidth - 5;
             // const canvaWidth = 760;
             // const canvaHeight = 700;
             this.menu = document.createElement("div");
@@ -334,6 +333,8 @@ class ColorPicker
         {
             this.ctx = context;
             this.drawPalette();
+            this.calculateNewCurCords();
+            this.drawCursor();
         }
         else
         {
@@ -462,7 +463,6 @@ class ColorPicker
                 this.ctx.fillRect(this.segWidth * x, this.segWidth * y, this.segWidth, this.segWidth);
             }
         }
-        this.drawCursor();
     }
     private getColor()
     {
@@ -543,36 +543,21 @@ class ColorPicker
     }
     private calculateNewCurCords()
     {
-        for (let y = 0; y < this.canva.height / this.segWidth; y++)
+        let x = this.colorS * this.multiplyX;
+        let y = -(50 * this.multiplyY * (this.multiplyX_ * (-100 + this.colorL) + x)) / (100 * this.multiplyX_ - x);
+        if (y < 0)
         {
-            for (let x = 0; x < this.canva.width / this.segWidth; x++)
-            {
-                const l = ((100 - x / this.multiplyX_) / 50) * (50 - y / this.multiplyY);
-                const s = x / this.multiplyX;
-                const numbers: number[][] = [[], [], [], []];
-                numbers[0][0] = Math.floor(l)
-                numbers[0][1] = Math.floor(s)
-                numbers[1][0] = Math.ceil(l)
-                numbers[1][1] = Math.ceil(s)
-                numbers[2][0] = Math.floor(l)
-                numbers[2][1] = Math.ceil(s)
-                numbers[3][0] = Math.ceil(l)
-                numbers[3][1] = Math.floor(s)
-                for (let i = 0; i < numbers.length; i++) {
-                    const el = numbers[i];
-                    const nl = el[0];
-                    const ns = el[1];
-                    if (nl > 35 && nl < 45 && ns > 95) console.log(ns, nl);
-                    if (this.colorS == ns && this.colorL == nl)
-                    {
-                        this.cursorX = x * this.segWidth;
-                        this.cursorY = y * this.segWidth;
-                        x = 1000;
-                        y = 1000;
-                    }
-                }
-            }
+            x = x + y / this.multiplyX;
+            y = 0;
         }
+        x *= this.segWidth;
+        y *= this.segWidth;
+
+        x = Math.min(Math.max(x, 2), this.canva.width - 2)
+        y = Math.min(Math.max(y, 2), this.canva.height - 2)
+        this.cursorX = x;
+        this.cursorY = y;
+        console.log(x, y);
     }
     private canvaClick(e: MouseEvent)
     {

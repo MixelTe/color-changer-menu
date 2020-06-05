@@ -514,6 +514,8 @@ class ColorPicker
         if (value - value == 0 && 0 <= value && value <= 100)
         {
             this.colorS = value;
+            this.calculateNewCurCords();
+            this.drawCursor();
         }
         value = this.inputS.value;
         if (value.length > 3)
@@ -528,6 +530,8 @@ class ColorPicker
         if (value - value == 0  && 0 <= value && value <= 100)
         {
             this.colorL = value;
+            this.calculateNewCurCords();
+            this.drawCursor();
         }
         value = this.inputL.value;
         if (value.length > 3)
@@ -535,6 +539,39 @@ class ColorPicker
             this.inputL.value = value.slice(0, 3);
         }
         this.curColorDiv.style.backgroundColor = this.getColor();
+    }
+    private calculateNewCurCords()
+    {
+        for (let y = 0; y < this.canva.height / this.segWidth; y++)
+        {
+            for (let x = 0; x < this.canva.width / this.segWidth; x++)
+            {
+                const l = ((100 - x / this.multiplyX_) / 50) * (50 - y / this.multiplyY);
+                const s = x / this.multiplyX;
+                const numbers: number[][] = [[], [], [], []];
+                numbers[0][0] = Math.floor(l)
+                numbers[0][1] = Math.floor(s)
+                numbers[1][0] = Math.ceil(l)
+                numbers[1][1] = Math.ceil(s)
+                numbers[2][0] = Math.floor(l)
+                numbers[2][1] = Math.ceil(s)
+                numbers[3][0] = Math.ceil(l)
+                numbers[3][1] = Math.floor(s)
+                for (let i = 0; i < numbers.length; i++) {
+                    const el = numbers[i];
+                    const nl = el[0];
+                    const ns = el[1];
+                    if (nl > 35 && nl < 45 && ns > 95) console.log(ns, nl);
+                    if (this.colorS == ns && this.colorL == nl)
+                    {
+                        this.cursorX = x * this.segWidth;
+                        this.cursorY = y * this.segWidth;
+                        x = 1000;
+                        y = 1000;
+                    }
+                }
+            }
+        }
     }
     private canvaClick(e: MouseEvent)
     {

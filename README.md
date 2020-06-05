@@ -30,6 +30,9 @@ Add this style to html (optional)
 Write code in your program to use it
 ```js
 
+//create new picker
+const colorPicker = new ColorPicker();
+
 //some HTML element on page
 const a = document.getElementById("one");
 a.addEventListener("click", openPicker);
@@ -43,8 +46,18 @@ function openPicker()
     //if you want to open menu beside HTML element you can calculate rect this way:
     const rect = {x: this.offsetLeft, y: this.offsetTop, width: this.offsetWidth, height: this.offsetHeight}
 
-    //create new picker
-    const colorPicker = new ColorPicker();
     colorPicker.openMenu(rect);
 }
 ```
+
+#
+## Picker setting
+menu placement:
+``` js
+colorPicker.openMenu(rect, Ypos, Xpos);
+```
+Ypos can be "up" or "down"
+
+Xpos can be "left", "center" or "right"
+
+![](/docs/menu_place.png)

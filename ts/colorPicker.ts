@@ -7,7 +7,6 @@ class ColorPicker
     private menuWindow: HTMLDivElement;
 
     private menuTop: HTMLDivElement;
-    private closeButton: HTMLDivElement;
 
     private menu: HTMLDivElement;
     private canva: HTMLCanvasElement;
@@ -19,6 +18,7 @@ class ColorPicker
     private inputS: HTMLInputElement;
 
     private menuBottom: HTMLDivElement;
+    private closeButton: HTMLDivElement;
     private okButton: HTMLDivElement;
 
     private multiplyX: number;
@@ -49,6 +49,9 @@ class ColorPicker
     private firstClick = false;
     private isOpen = false;
     private colorIsChanging = false;
+    private rounded = true;
+    private changeBackground = false;
+    private changeBorder = false;
     private segWidth = 3;
     private colorH = 0;
     private colorS = 100;
@@ -88,7 +91,7 @@ class ColorPicker
             // const canvaWidth = 760;
             // const canvaHeight = 700;
             this.menu = document.createElement("div");
-            this.menu.style.backgroundColor = "lightgray";
+            // this.menu.style.backgroundColor = "lightgray";
             this.menu.style.borderRadius = "5%";
             this.menu.style.width = "100%";
             this.menu.style.height = this.height - topMenuHeight - bottomMenuHeight + "px";
@@ -262,34 +265,11 @@ class ColorPicker
 
 
             const okButtonHeight = 17;
-            let backgrounCloseButton: string;
-            {
-                const canva = document.createElement("canvas");
-                canva.width = 24;
-                canva.height = okButtonHeight;
-                const ctx = canva.getContext("2d");
-                if (ctx != null)
-                {
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(0, 0, canva.width, canva.height);
-                    ctx.fillStyle = "black";
-                    const a = 4;
-                    const shiftY = 1;
-                    const shiftX = 1;
-                    const width = 17;
-                    ctx.lineWidth = 2;
-                    ctx.beginPath;
-                    ctx.moveTo(a + shiftX, a + shiftY);
-                    ctx.lineTo(width - a + shiftX, width - a + shiftY);
-                    ctx.moveTo(width - a + shiftX, a + shiftY);
-                    ctx.lineTo(a + shiftX, width - a + shiftY);
-                    ctx.stroke();
-                }
-                backgrounCloseButton = 'url(' + canva.toDataURL("image/png") + ')';
-            }
+            let backgrounCloseButton = this.drawCloseButton();
 
             this.closeButton = document.createElement("div");
             this.closeButton.style.borderRadius = "7px 0px 0px 7px";
+            this.closeButton.style.backgroundColor = "red";
             this.closeButton.style.backgroundImage = backgrounCloseButton;
             this.closeButton.style.border = "1px solid black";
             this.closeButton.style.borderRightWidth = "0px";
@@ -302,6 +282,7 @@ class ColorPicker
             this.okButton = document.createElement("div");
             this.okButton.style.borderRadius = "0px 7px 7px 0px";
             this.okButton.style.backgroundColor = "green";
+            this.okButton.style.color = "black";
             this.okButton.style.border = "1px solid black";
             this.okButton.style.borderLeftWidth = "0px";
             this.okButton.style.width = "42px";
@@ -354,7 +335,132 @@ class ColorPicker
     {
         this.firstClick = true;
         this.moveMenuAroundRect(rect, positionY, positionX, strict);
+        this.displayColor();
         this.openMenu();
+    }
+    public pickerStyleColors(element: "buttonOk" | "buttonCancel" | "window" | "inputs", type: "background" | "font", value?: string)
+    {
+        switch (element) {
+            case "buttonOk":
+                switch (type) {
+                    case "font":
+                        if (value != null) this.okButton.style.color = value
+                        else return this.okButton.style.color;
+                        break;
+                    case "background":
+                        if (value != null) this.okButton.style.backgroundColor = value
+                        else return this.okButton.style.backgroundColor;
+                        break;
+                    default:
+                        throw new Error(`second argument value unvalid. It can be: 'font' or 'background'. Your value: '${type}'`);
+                }
+                break;
+            case "buttonCancel":
+                switch (type)
+                {
+                    case "font":
+                        if (value != null)
+                        {
+                            this.closeButton.style.color = value
+                            this.closeButton.style.backgroundImage = this.drawCloseButton(this.closeButton.style.backgroundColor, this.closeButton.style.color);
+                        }
+                        else{ return this.closeButton.style.color};
+                        break;
+                    case "background":
+                        if (value != null)
+                        {
+                            this.closeButton.style.backgroundColor = value;
+                            this.closeButton.style.backgroundImage = this.drawCloseButton(this.closeButton.style.backgroundColor, this.closeButton.style.color);
+                        }
+                        else{ return this.closeButton.style.backgroundColor};
+                        break;
+                    default:
+                        throw new Error(`second argument value unvalid. It can be: 'font' or 'background'. Your value: '${type}'`);
+                }
+                break;
+            case "window":
+                switch (type) {
+                    case "font":
+                        if (value != null) this.menuWindow.style.color = value
+                        else return this.menuWindow.style.color;
+                        break;
+                    case "background":
+                        if (value != null) this.menuWindow.style.backgroundColor = value
+                        else return this.menuWindow.style.backgroundColor;
+                        break;
+                    default:
+                        throw new Error(`second argument value unvalid. It can be: 'font' or 'background'. Your value: '${type}'`);
+                }
+                break;
+            case "inputs":
+                switch (type) {
+                    case "font":
+                        if (value != null)
+                        {
+                            this.inputH.style.color = value
+                            this.inputL.style.color = value
+                            this.inputS.style.color = value
+                        }
+                        else { return this.inputH.style.color; };
+                        break;
+                    case "background":
+                        if (value != null)
+                        {
+                            this.inputH.style.backgroundColor = value
+                            this.inputL.style.backgroundColor = value
+                            this.inputS.style.backgroundColor = value
+                        }
+                        else { return this.inputH.style.backgroundColor; };
+                        break;
+                    default:
+                        throw new Error(`second argument value unvalid. It can be: 'font' or 'background'. Your value: '${type}'`);
+                }
+                break;
+            default:
+                throw new Error(`first argument value unvalid. It can be: 'buttonOk', 'buttonCancel', 'window' or 'inputs'. Your value: '${element}'`);
+        }
+    }
+    public pickerStyleWindow(option: "roundCorners" | "pickedColorBackground" | "pickedColorBorder", value?: boolean)
+    {
+        switch (option) {
+            case "roundCorners":
+                if (typeof value == "boolean")
+                {
+                    if (value)
+                    {
+                        this.menuWindow.style.borderRadius = "5%";
+                        this.menu.style.borderRadius = "5%";
+                        this.canva.style.borderRadius = "5px 5px 0px 0px";
+                        this.cursor.style.borderRadius = "5px 5px 0px 0px";
+                        this.curColorDiv.style.borderRadius = "0 0 5px 5px";
+                        this.rangeInputH.style.borderRadius = "5px";
+                        this.closeButton.style.borderRadius = "7px 0px 0px 7px";
+                        this.okButton.style.borderRadius = "0px 7px 7px 0px";
+                    }
+                    else
+                    {
+                        this.menuWindow.style.borderRadius = "0";
+                        this.menu.style.borderRadius = "0";
+                        this.canva.style.borderRadius = "0";
+                        this.cursor.style.borderRadius = "0";
+                        this.curColorDiv.style.borderRadius = "0";
+                        this.rangeInputH.style.borderRadius = "0";
+                        this.closeButton.style.borderRadius = "0";
+                        this.okButton.style.borderRadius = "0";
+                    }
+                } else {return this.rounded}
+                break;
+            case "pickedColorBackground":
+                if (typeof value == "boolean") this.changeBackground = value;
+                else {return this.changeBackground}
+                break;
+            case "pickedColorBorder":
+                if (typeof value == "boolean") this.changeBorder = value;
+                else {return this.changeBorder}
+                break;
+            default:
+                throw new Error(`first argument value unvalid. It can be: 'roundCorners', 'pickedColorBackground' or 'pickedColorBorder'. Your value: '${option}'`);
+        }
     }
     private moveMenuToCursor(e: MouseEvent)
     {
@@ -501,13 +607,13 @@ class ColorPicker
                 this.rangeInputH.value = `${value}`;
                 this.drawPalette();
             }
-            value = this.inputH.value;
-            if (value.length > 3)
+            let valuestr = this.inputL.value;
+            if (valuestr.length > 3)
             {
-                this.inputH.value = value.slice(0, 3);
+                this.inputH.value = valuestr.slice(0, 3);
             }
         }
-        this.curColorDiv.style.backgroundColor = this.getColor();
+        this.displayColor();
     }
     private changeSColor()
     {
@@ -518,28 +624,34 @@ class ColorPicker
             this.calculateNewCurCords();
             this.drawCursor();
         }
-        value = this.inputS.value;
-        if (value.length > 3)
+        let valuestr = this.inputL.value;
+        if (valuestr.length > 3)
         {
-            this.inputS.value = value.slice(0, 3);
+            this.inputS.value = valuestr.slice(0, 3);
         }
-        this.curColorDiv.style.backgroundColor = this.getColor();
+        this.displayColor();
     }
     private changeLColor()
     {
-        let value: number | string = parseInt(this.inputL.value);
+        let value = parseInt(this.inputL.value);
         if (value - value == 0  && 0 <= value && value <= 100)
         {
             this.colorL = value;
             this.calculateNewCurCords();
             this.drawCursor();
         }
-        value = this.inputL.value;
-        if (value.length > 3)
+        let valuestr = this.inputL.value;
+        if (valuestr.length > 3)
         {
-            this.inputL.value = value.slice(0, 3);
+            this.inputL.value = valuestr.slice(0, 3);
         }
+        this.displayColor();
+    }
+    private displayColor()
+    {
         this.curColorDiv.style.backgroundColor = this.getColor();
+        if (this.changeBackground) this.menuWindow.style.backgroundColor = this.getColor();
+        if (this.changeBorder) this.menuWindow.style.borderColor = this.getColor();
     }
     private calculateNewCurCords()
     {
@@ -578,7 +690,7 @@ class ColorPicker
         this.colorL = l;
         this.inputS.value = `${s}`;
         this.inputL.value = `${l}`;
-        this.curColorDiv.style.backgroundColor = this.getColor();
+        this.displayColor();
     }
 
 
@@ -728,6 +840,36 @@ class ColorPicker
             y > this.Y &&
             y < this.Y + this.height
         );
+    }
+
+    private drawCloseButton(back?: string, front?: string)
+    {
+        {
+            const canva = document.createElement("canvas");
+            canva.width = 24;
+            canva.height = 17;
+            const ctx = canva.getContext("2d");
+            if (ctx != null)
+            {
+                ctx.fillStyle = "red";
+                if (back != null) ctx.fillStyle = back;
+                ctx.fillRect(0, 0, canva.width, canva.height);
+                ctx.fillStyle = "black";
+                if (front != null) ctx.fillStyle = front;
+                const a = 4;
+                const shiftY = 1;
+                const shiftX = 1;
+                const width = 17;
+                ctx.lineWidth = 2;
+                ctx.beginPath;
+                ctx.moveTo(a + shiftX, a + shiftY);
+                ctx.lineTo(width - a + shiftX, width - a + shiftY);
+                ctx.moveTo(width - a + shiftX, a + shiftY);
+                ctx.lineTo(a + shiftX, width - a + shiftY);
+                ctx.stroke();
+            }
+            return 'url(' + canva.toDataURL("image/png") + ')';
+        }
     }
 }
 interface Rect

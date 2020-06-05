@@ -20,9 +20,11 @@ const g = document.getElementById("seven");
 if (g != null) g.addEventListener("click", btnClick);
 
 const colorPicker = new ColorPicker();
+// colorPicker.pickerStyleColors("inputs", "background", "rgb(100, 100, 100)");
+// colorPicker.pickerStyleWindow("pickedColorBorder", true);
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
-    const rect = {x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5}
+    const rect = { x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5 };
     colorPicker.openMenu_AroundRect(rect, "up", "left");
 }

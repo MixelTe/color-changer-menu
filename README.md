@@ -52,7 +52,7 @@ function openPicker()
 
 #
 ## Picker setting
-menu placement:
+### Placement:
 ``` js
 colorPicker.openMenu(rect, Ypos, Xpos);
 ```
@@ -61,3 +61,47 @@ Ypos can be "up" or "down"
 Xpos can be "left", "center" or "right"
 
 ![](/docs/menu_place.png)
+
+### Set current color:
+``` js
+colorPicker.setColorHSL(h, s, l);
+colorPicker.setColorRGB(r, g, b);
+```
+
+### Style:
+To change/get color of background or font:
+
+``` js
+colorPicker.styleColors(element, parameter, color); //change
+colorPicker.styleColors(element, parameter); //get color
+```
+
+element can be "buttonOk", "buttonCancel", "window" or "inputs"
+
+parameter can be "font" or "background"
+
+color - some color
+
+![](/docs/menu_colors.png)
+
+To change/get window style options:
+
+``` js
+colorPicker.styleWindow(option, arg); //change
+colorPicker.styleWindow(option); //get boolean
+```
+option can be "roundCorners", "pickedColorBackground" or "pickedColorBorder"
+
+arg - boolean
+
+roundCorners false
+
+![](/docs/menu_notRounded.png)
+
+pickedColorBorder true
+
+![](/docs/menu_borderColor.gif)
+
+pickedColorBackground true
+
+![](/docs/menu_backgroundColor.gif)

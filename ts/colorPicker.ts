@@ -1,10 +1,12 @@
 type PosY = "up" | "down";
 type PosX = "left" | "center" | "right";
 
+type EventNames = "colorPicker-input" | "colorPicker-changed" | "colorPicker-canceled" | "colorPicker-confirmed" | "colorPicker-opened" | "colorPicker-closed" | "colorPicker-reopened";
+
 class ColorPicker
 {
 
-    private menuWindow: HTMLDivElement;
+    public menuWindow: HTMLDivElement;
 
     private menuTop: HTMLDivElement;
 
@@ -729,19 +731,22 @@ class ColorPicker
             case "down":
                 this.colorIsChanging = true;
                 this.canvaClick(e);
-                console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
+                this.fireEvent("colorPicker-changed");
+                // console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 break;
             case "move":
                 if (this.colorIsChanging)
                 {
                     this.canvaClick(e);
-                    console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
+                    this.fireEvent("colorPicker-input");
+                    // console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 }
                 break;
             case "up":
                 if (this.colorIsChanging)
                 {
-                    console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
+                    this.fireEvent("colorPicker-changed");
+                    // console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 }
                 this.colorIsChanging = false;
                 break;
@@ -751,10 +756,12 @@ class ColorPicker
     {
         switch (button) {
             case "cancel":
-                console.log("user press cancel button");
+                this.fireEvent("colorPicker-canceled");
+                // console.log("user press cancel button");
                 break;
             case "ok":
-                console.log("user press ok button");
+                this.fireEvent("colorPicker-confirmed");
+                // console.log("user press ok button");
                 break;
             default:
                 break;
@@ -781,11 +788,13 @@ class ColorPicker
         }
         if (input == "changed")
         {
-            console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
+            this.fireEvent("colorPicker-changed");
+            // console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
         }
         else
         {
-            console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
+            this.fireEvent("colorPicker-input");
+            // console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
         }
     }
 
@@ -816,7 +825,12 @@ class ColorPicker
             this.cursor.addEventListener("mousemove", this.canvaMoveHandler);
             document.addEventListener("mouseup", this.canvaUpHandler);
 
-            console.log("color picker open");
+            this.fireEvent("colorPicker-opened")
+            // console.log("color picker open");
+        }
+        else
+        {
+            this.fireEvent("colorPicker-reopened")
         }
     }
     private closeMenu()
@@ -837,7 +851,9 @@ class ColorPicker
             this.cursor.removeEventListener("mousedown", this.canvaDownHandler);
             this.cursor.removeEventListener("mousemove", this.canvaMoveHandler);
             document.removeEventListener("mouseup", this.canvaUpHandler);
-            console.log("color picker closed");
+
+            this.fireEvent("colorPicker-closed")
+            // console.log("color picker closed");
         }
     }
     private isInFocus(e: MouseEvent)
@@ -900,7 +916,46 @@ class ColorPicker
             return 'url(' + canva.toDataURL("image/png") + ')';
         }
     }
+    private fireEvent(eventName: EventNames)
+    {
+        const detail = this.createEventDetail(eventName);
+        const e = new CustomEvent(eventName, { detail });
+        this.menuWindow.dispatchEvent(e);
+    }
+    private createEventDetail(eventName: EventNames)
+    {
+        switch (eventName)
+        {
+            case "colorPicker-input":
+            case "colorPicker-changed":
+            case "colorPicker-canceled":
+            case "colorPicker-confirmed":
+                return this.getEventData();
 
+            case "colorPicker-opened":
+            case "colorPicker-reopened":
+                return { x: this.X, y: this.Y };
+
+            case "colorPicker-closed":
+                return null;
+
+            default: throw new Error(`Unexpected value: ${eventName}`);
+        }
+    }
+    private getEventData()
+    {
+        const rgb = this.HSLToRGB(this.colorH, this.colorH, this.colorL);
+        return {
+            h: this.colorH,
+            s: this.colorH,
+            l: this.colorL,
+            colorHSL: this.getColor(),
+            r: rgb[0],
+            g: rgb[1],
+            b: rgb[2],
+            colorRBG: `rbg(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+        };
+    }
     private RGBToHSL(r: number, g: number, b: number)
     {
         r /= 255;
@@ -926,6 +981,30 @@ class ColorPicker
         l = +(l * 100).toFixed(1);
 
         return [h, s, l];
+    }
+    private HSLToRGB(h: number, s: number, l: number)
+    {
+        s /= 100;
+        l /= 100;
+
+        let c = (1 - Math.abs(2 * l - 1)) * s,
+            x = c * (1 - Math.abs((h / 60) % 2 - 1)),
+            m = l - c / 2,
+            r = 0,
+            g = 0,
+            b = 0;
+
+        if (0 <= h && h < 60) { r = c; g = x; b = 0; }
+        else if (60 <= h && h < 120) { r = x; g = c; b = 0; }
+        else if (120 <= h && h < 180) { r = 0; g = c; b = x; }
+        else if (180 <= h && h < 240) { r = 0; g = x; b = c; }
+        else if (240 <= h && h < 300) { r = x; g = 0; b = c; }
+        else if (300 <= h && h < 360) { r = c; g = 0; b = x; }
+        r = Math.round((r + m) * 255);
+        g = Math.round((g + m) * 255);
+        b = Math.round((b + m) * 255);
+
+        return [r, g, b];
     }
 }
 interface Rect

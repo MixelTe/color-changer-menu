@@ -24,6 +24,16 @@ const colorPicker = new ColorPicker();
 // colorPicker.styleWindow("pickedColorBorder", true);
 // colorPicker.setColorHSL(200, 100, 50);
 
+colorPicker.menuWindow.addEventListener("colorPicker-opened", (e) => console.log((<CustomEvent>e).detail));
+colorPicker.menuWindow.addEventListener("colorPicker-reopened", (e) => console.log((<CustomEvent>e).detail));
+colorPicker.menuWindow.addEventListener("colorPicker-closed", (e) => console.log((<CustomEvent>e).detail));
+
+colorPicker.menuWindow.addEventListener("colorPicker-input", (e) => console.log((<CustomEvent>e).detail));
+colorPicker.menuWindow.addEventListener("colorPicker-changed", (e) => console.log((<CustomEvent>e).detail));
+
+colorPicker.menuWindow.addEventListener("colorPicker-canceled", (e) => console.log((<CustomEvent>e).detail));
+colorPicker.menuWindow.addEventListener("colorPicker-confirmed", (e) => console.log((<CustomEvent>e).detail));
+
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
     const rect = { x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5 };

@@ -20,7 +20,7 @@ const colorPicker = new ColorPicker();
 // colorPicker.setColorHSL(200, 100, 50);
 // colorPicker.setPlacement("down", "center");
 
-// function logIt(e:MyEvent)
+// function logIt(e: Coordinate | Color)
 // {
 //     console.log(e.eventName, e);
 // }

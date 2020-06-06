@@ -14,7 +14,7 @@ interface Options
     pickedColorBorder?: boolean;
 }
 
-type ColorPickerEventHandler = (e: MyEvent) => void;
+type ColorPickerEventHandler = (e:  Coordinate | Color) => void;
 
 class ColorPicker
 {
@@ -954,7 +954,7 @@ class ColorPicker
     }
 
 
-    public addEventListener(eventName: EventNames, f: (d:MyEvent) => void)
+    public addEventListener(eventName: EventNames, f: (d: Coordinate | Color) => void)
     {
         switch (eventName)
         {
@@ -978,7 +978,7 @@ class ColorPicker
 		curentListenersFunctions.push(f);
 
     }
-    public removeEventListener(eventName: EventNames, f: (d: MyEvent) => void)
+    public removeEventListener(eventName: EventNames, f: (d: Coordinate | Color) => void)
     {
         switch (eventName)
         {
@@ -1136,17 +1136,21 @@ interface Rect
     width: number;
     height: number;
 }
-interface MyEvent
+interface Coordinate
 {
-    x?: number;
-    y?: number;
-    h?: number;
-    s?: number;
-    l?: number;
-    colorHSL?: string;
-    r?: number;
-    g?: number;
-    b?: number;
-    colorRBG?: string;
+    x: number;
+    y: number;
+    eventName: EventNames;
+}
+interface Color
+{
+    h: number;
+    s: number;
+    l: number;
+    colorHSL: string;
+    r: number;
+    g: number;
+    b: number;
+    colorRBG: string;
     eventName: EventNames;
 }

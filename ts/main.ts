@@ -39,8 +39,17 @@ const colorPicker = new ColorPicker();
 
 // colorPicker.removeEventListener("colorPicker-opened", logIt);
 
+const options = {
+    buttonOk: { background: "#00d93d" },
+    buttonCancel: { text: "hsl(303, 100%, 27%)"  },
+    window: { background: "black", text: "white", borderWidth: 6 },
+    inputs: { background: "rgb(115, 115, 115)", text: "white", borderColor: "orange" },
+    pickedColorBorder: true
+}
+colorPicker.setStyle(options);
+
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
-    const rect = { x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5 };
+    const rect = { x: this.offsetLeft, y: this.offsetTop, width: this.offsetWidth - 6, height: this.offsetHeight + 5 };
     colorPicker.openMenu(rect);
 }

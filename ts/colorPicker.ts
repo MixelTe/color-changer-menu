@@ -1029,12 +1029,6 @@ class ColorPicker
             default: throw new Error(`Unexpected value: ${eventName}`);
         }
     }
-    private fireEvent_(eventName: EventNames)
-    {
-        const detail = this.createEventDetail(eventName);
-        const e = new CustomEvent(eventName, { detail });
-        this.menuWindow.dispatchEvent(e);
-    }
 
     private drawCloseButton()
     {

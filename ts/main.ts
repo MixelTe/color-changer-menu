@@ -35,13 +35,13 @@ const colorPicker = new ColorPicker();
 
 // colorPicker.removeEventListener("colorPicker-opened", logIt);
 
-colorPicker.setStyle({
-    buttonOk: { background: "#00d93d" },
-    buttonCancel: { text: "hsl(303, 100%, 27%)"  },
-    window: { background: "black", text: "white", borderWidth: 6 },
-    inputs: { background: "rgb(115, 115, 115)", text: "white", borderColor: "orange" },
-    pickedColorBorder: true,
-});
+// colorPicker.setStyle({
+//     buttonOk: { background: "#00d93d" },
+//     buttonCancel: { text: "hsl(303, 100%, 27%)"  },
+//     window: { background: "black", text: "white", borderWidth: 6 },
+//     inputs: { background: "rgb(115, 115, 115)", text: "white", borderColor: "orange" },
+//     pickedColorBorder: true,
+// });
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {

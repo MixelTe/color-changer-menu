@@ -588,7 +588,7 @@ class ColorPicker
         {
             case "up":
                 {
-                    let newY = rect.y - this.height - parseInt(this.menuWindow.style.borderWidth)*2;
+                    let newY = rect.y - this.height - parseInt(this.menuWindow.style.borderWidth, 10)*2;
                     if (!strict && newY < 0)
                     {
                         newY = rect.y + rect.height;
@@ -603,7 +603,7 @@ class ColorPicker
                     let newY = rect.y + rect.height;
                     if (!strict && newY + this.height > document.body.offsetHeight && rect.y - this.height > 0)
                     {
-                        newY = rect.y - this.height - parseInt(this.menuWindow.style.borderWidth)*2;
+                        newY = rect.y - this.height - parseInt(this.menuWindow.style.borderWidth, 10)*2;
                     }
                     this.Y = newY
                     this.menuWindow.style.top = newY + "px";
@@ -692,14 +692,14 @@ class ColorPicker
     {
         if (rangeInput)
         {
-            const value = parseInt(this.rangeInputH.value);
+            const value = parseInt(this.rangeInputH.value, 10);
             this.colorH = value;
             this.inputH.value = `${value}`;
             this.drawPalette();
         }
         else
         {
-            let value: number | string = parseInt(this.inputH.value);
+            let value = parseInt(this.inputH.value, 10);
             if (value - value == 0 && 0 <= value && value <= 360)
             {
                 this.colorH = value;
@@ -716,7 +716,7 @@ class ColorPicker
     }
     private changeSColor()
     {
-        let value: number | string = parseInt(this.inputS.value);
+        let value = parseInt(this.inputS.value, 10);
         if (value - value == 0 && 0 <= value && value <= 100)
         {
             this.colorS = value;
@@ -732,7 +732,7 @@ class ColorPicker
     }
     private changeLColor()
     {
-        let value = parseInt(this.inputL.value);
+        let value = parseInt(this.inputL.value, 10);
         if (value - value == 0 && 0 <= value && value <= 100)
         {
             this.colorL = value;
@@ -954,7 +954,7 @@ class ColorPicker
     }
 
 
-    public addEventListener(eventName: EventNames, f: (d: Coordinate | Color) => void)
+    public addEventListener(eventName: EventNames, f: ColorPickerEventHandler)
     {
         switch (eventName)
         {
@@ -978,7 +978,7 @@ class ColorPicker
 		curentListenersFunctions.push(f);
 
     }
-    public removeEventListener(eventName: EventNames, f: (d: Coordinate | Color) => void)
+    public removeEventListener(eventName: EventNames, f: ColorPickerEventHandler)
     {
         switch (eventName)
         {

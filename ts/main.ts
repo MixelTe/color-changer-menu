@@ -23,6 +23,8 @@ const colorPicker = new ColorPicker();
 // colorPicker.styleColors("inputs", "background", "rgb(100, 100, 100)");
 // colorPicker.styleWindow("pickedColorBorder", true);
 // colorPicker.setColorHSL(200, 100, 50);
+// colorPicker.setPlacement("down", "center");
+
 function logIt(e:MyEvent)
 {
     console.log(e.eventName, e);
@@ -41,5 +43,5 @@ function logIt(e:MyEvent)
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
     const rect = { x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5 };
-    colorPicker.openMenu_AroundRect(rect, "up", "left");
+    colorPicker.openMenu_AroundRect(rect);
 }

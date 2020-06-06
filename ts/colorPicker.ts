@@ -59,6 +59,10 @@ class ColorPicker
     private colorS = 100;
     private colorL = 50;
 
+    private placement_positionY: PosY = "up";
+    private placement_positionX: PosX = "left";
+    private placement_strict = false;
+
     private eventsMap = new Map();
 
 
@@ -509,6 +513,36 @@ class ColorPicker
         this.drawPalette();
         this.drawCursor();
     }
+    public setPlacement(positionY: PosY, positionX?: PosX, strict?: boolean)
+    {
+        if (typeof positionY == "string")
+        {
+            switch (positionY)
+            {
+                case "up":
+                case "down":
+                    this.placement_positionY = positionY;
+                    break;
+                default: throw new Error(`positionY parameter invalid. It can be: 'up' or 'down'. Your value: '${positionY}'`);
+            }
+        }
+        if (typeof positionX == "string")
+        {
+            switch (positionX)
+            {
+                case "left":
+                case "center":
+                case "right":
+                    this.placement_positionX = positionX;
+                    break;
+                default: throw new Error(`positionX parameter invalid. It can be: 'left', 'center' or 'right'. Your value: '${positionX}'`);
+            }
+        }
+        if (typeof strict == "boolean")
+        {
+            this.placement_strict = strict;
+        }
+    }
     public getColor()
     {
         const rgb = this.HSLToRGB(this.colorH, this.colorH, this.colorL);
@@ -539,7 +573,7 @@ class ColorPicker
         this.X = newX
         this.menuWindow.style.left = newX + "px";
     }
-    private moveMenuAroundRect(rect: Rect, positionY: PosY = "up", positionX: PosX = "left", strict = false)
+    private moveMenuAroundRect(rect: Rect, positionY: PosY = this.placement_positionY, positionX: PosX = this.placement_positionX, strict = this.placement_strict)
     {
         if (typeof rect != "object") throw new Error(`rect parameter invalid. It must be object with parameters: x, y, width, height, where y is upper left corner. Your value: '${rect}'`);
         if (typeof rect.x != "number") throw new Error(`rect.x parameter invalid. It must be number. Your value: '${rect.x}'`);

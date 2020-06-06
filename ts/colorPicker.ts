@@ -285,18 +285,17 @@ class ColorPicker
 
 
             const okButtonHeight = 17;
-            let backgrounCloseButton = this.drawCloseButton();
 
             this.closeButton = document.createElement("div");
             this.closeButton.style.borderRadius = "7px 0px 0px 7px";
             this.closeButton.style.backgroundColor = "red";
-            this.closeButton.style.backgroundImage = backgrounCloseButton;
             this.closeButton.style.border = "1px solid black";
             this.closeButton.style.borderRightWidth = "0px";
             this.closeButton.style.width = "18px";
             this.closeButton.style.height = okButtonHeight + "px";
             this.closeButton.style.display = "table-cell";
             this.closeButton.style.cursor = "pointer";
+            this.closeButton.style.backgroundImage = this.drawCloseButton();
             buttonDIV.appendChild(this.closeButton);
 
             this.okButton = document.createElement("div");
@@ -492,10 +491,14 @@ class ColorPicker
             if (options.buttonCancel.text != null)
             {
                 this.closeButton.style.color = options.buttonCancel.text;
+                this.closeButton.style.backgroundImage = "url()";
+                this.closeButton.style.backgroundImage = this.drawCloseButton();
             }
             if (options.buttonCancel.background != null)
             {
                 this.closeButton.style.backgroundColor = options.buttonCancel.background;
+                this.closeButton.style.backgroundImage = "url()";
+                this.closeButton.style.backgroundImage = this.drawCloseButton();
             }
         }
         if (options.window != null)
@@ -994,7 +997,7 @@ class ColorPicker
         this.menuWindow.dispatchEvent(e);
     }
 
-    private drawCloseButton(back?: string, front?: string)
+    private drawCloseButton()
     {
         {
             const canva = document.createElement("canvas");
@@ -1003,11 +1006,9 @@ class ColorPicker
             const ctx = canva.getContext("2d");
             if (ctx != null)
             {
-                ctx.fillStyle = "red";
-                if (back != null) ctx.fillStyle = back;
+                ctx.fillStyle = this.closeButton.style.backgroundColor;
                 ctx.fillRect(0, 0, canva.width, canva.height);
-                ctx.fillStyle = "black";
-                if (front != null) ctx.fillStyle = front;
+                ctx.strokeStyle = this.closeButton.style.color;
                 const a = 4;
                 const shiftY = 1;
                 const shiftX = 1;

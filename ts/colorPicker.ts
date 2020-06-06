@@ -132,7 +132,7 @@ class ColorPicker
             this.menu.appendChild(this.cursor);
 
             this.curColorDiv = document.createElement("div");
-            this.curColorDiv.style.backgroundColor = this.getColor();
+            this.curColorDiv.style.backgroundColor = this.getHSLColor();
             // this.curColorDiv.style.backgroundColor = "lightblue";
             this.curColorDiv.style.borderRadius = "0 0 5px 5px";
             this.curColorDiv.style.width = canvaWidth + "px";
@@ -509,6 +509,20 @@ class ColorPicker
         this.drawPalette();
         this.drawCursor();
     }
+    public getColor()
+    {
+        const rgb = this.HSLToRGB(this.colorH, this.colorH, this.colorL);
+        return {
+            h: this.colorH,
+            s: this.colorH,
+            l: this.colorL,
+            colorHSL: this.getHSLColor(),
+            r: rgb[0],
+            g: rgb[1],
+            b: rgb[2],
+            colorRBG: `rbg(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+        }
+    }
     private moveMenuToCursor(e: MouseEvent)
     {
         const pY = e.pageY;
@@ -617,7 +631,7 @@ class ColorPicker
             }
         }
     }
-    private getColor()
+    private getHSLColor()
     {
         return `hsl(${this.colorH}, ${this.colorS}%, ${this.colorL}%)`;
     }
@@ -1005,8 +1019,6 @@ class ColorPicker
                 ctx.stroke();
             }
             return 'url(' + canva.toDataURL("image/png") + ')';
-        }
-    }
         }
     }
     private getEventData(eventName: EventNames)

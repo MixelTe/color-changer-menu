@@ -1066,7 +1066,7 @@ class ColorPicker
             r: rgb[0],
             g: rgb[1],
             b: rgb[2],
-            colorRBG: `rbg(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
+            colorRBG: `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
             eventName
         };
     }

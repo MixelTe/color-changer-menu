@@ -24,10 +24,10 @@ const colorPicker = new ColorPicker();
 // colorPicker.setColorHSL(200, 100, 50);
 // colorPicker.setPlacement("down", "center");
 
-function logIt(e:MyEvent)
-{
-    console.log(e.eventName, e);
-}
+// function logIt(e:MyEvent)
+// {
+//     console.log(e.eventName, e);
+// }
 
 // colorPicker.addEventListener("colorPicker-opened", logIt);
 // colorPicker.addEventListener("colorPicker-reopened", logIt);
@@ -42,5 +42,5 @@ function logIt(e:MyEvent)
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
     const rect = { x: this.offsetLeft, y: this.offsetTop - 5, width: this.offsetWidth - 6, height: this.offsetHeight + 5 };
-    colorPicker.openMenu_AroundRect(rect);
+    colorPicker.openMenu(rect);
 }

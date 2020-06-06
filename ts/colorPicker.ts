@@ -44,7 +44,7 @@ class ColorPicker
     private X = 0;
     private Y = 0;
     private clickHandler = this.isInFocus.bind(this);
-    private closeHandler = this.closeMenu.bind(this);
+    private closeHandler = this.close.bind(this);
     private buttonCancelHandler = this.buttonsClick.bind(this, "cancel");
     private buttonOkHandler = this.buttonsClick.bind(this, "ok");
     private colorHRHandler = this.inputs.bind(this, "colorHRange");
@@ -70,8 +70,8 @@ class ColorPicker
     private colorS = 100;
     private colorL = 50;
 
-    private placement_positionY: PosY = "up";
-    private placement_positionX: PosX = "left";
+    private placement_side: PosY = "up";
+    private placement_align: PosX = "left";
     private placement_strict = false;
 
     private eventsMap = new Map();
@@ -359,14 +359,14 @@ class ColorPicker
     public openMenu_OnCursor(e: MouseEvent)
     {
         this.moveMenuToCursor(e);
-        this.openMenu();
+        this.open();
     }
-    public openMenu_AroundRect(rect: Rect, positionY?: PosY, positionX?: PosX, strict?: boolean)
+    public openMenu(rect: Rect, side?: PosY, align?: PosX, strict?: boolean)
     {
         this.firstClick = true;
-        this.moveMenuAroundRect(rect, positionY, positionX, strict);
+        this.moveMenuAroundRect(rect, side, align, strict);
         this.displayColor();
-        this.openMenu();
+        this.open();
     }
     public setColorHSL(h: number, s: number, l: number)
     {
@@ -397,29 +397,29 @@ class ColorPicker
         this.drawPalette();
         this.drawCursor();
     }
-    public setPlacement(positionY: PosY, positionX?: PosX, strict?: boolean)
+    public setPlacement(side: PosY, align?: PosX, strict?: boolean)
     {
-        if (typeof positionY == "string")
+        if (typeof side == "string")
         {
-            switch (positionY)
+            switch (side)
             {
                 case "up":
                 case "down":
-                    this.placement_positionY = positionY;
+                    this.placement_side = side;
                     break;
-                default: throw new Error(`positionY parameter invalid. It can be: 'up' or 'down'. Your value: '${positionY}'`);
+                default: throw new Error(`positionY parameter invalid. It can be: 'up' or 'down'. Your value: '${side}'`);
             }
         }
-        if (typeof positionX == "string")
+        if (typeof align == "string")
         {
-            switch (positionX)
+            switch (align)
             {
                 case "left":
                 case "center":
                 case "right":
-                    this.placement_positionX = positionX;
+                    this.placement_align = align;
                     break;
-                default: throw new Error(`positionX parameter invalid. It can be: 'left', 'center' or 'right'. Your value: '${positionX}'`);
+                default: throw new Error(`positionX parameter invalid. It can be: 'left', 'center' or 'right'. Your value: '${align}'`);
             }
         }
         if (typeof strict == "boolean")
@@ -541,14 +541,14 @@ class ColorPicker
         this.X = newX
         this.menuWindow.style.left = newX + "px";
     }
-    private moveMenuAroundRect(rect: Rect, positionY: PosY = this.placement_positionY, positionX: PosX = this.placement_positionX, strict = this.placement_strict)
+    private moveMenuAroundRect(rect: Rect, side: PosY = this.placement_side, align: PosX = this.placement_align, strict = this.placement_strict)
     {
         if (typeof rect != "object") throw new Error(`rect parameter invalid. It must be object with parameters: x, y, width, height, where y is upper left corner. Your value: '${rect}'`);
         if (typeof rect.x != "number") throw new Error(`rect.x parameter invalid. It must be number. Your value: '${rect.x}'`);
         if (typeof rect.y != "number") throw new Error(`rect.y parameter invalid. It must be number that mean upper left corner of rect. Your value: '${rect.y}'`);
         if (typeof rect.width != "number") throw new Error(`rect.width parameter invalid. It must be number. Your value: '${rect.width}'`);
         if (typeof rect.height != "number") throw new Error(`rect.height parameter invalid. It must be number. Your value: '${rect.height}'`);
-        switch (positionY)
+        switch (side)
         {
             case "up":
                 {
@@ -575,9 +575,9 @@ class ColorPicker
                 break;
 
             default:
-                throw new Error(`positionY parameter invalid. It can be: 'up' or 'down'. Your value: '${positionY}'`);
+                throw new Error(`positionY parameter invalid. It can be: 'up' or 'down'. Your value: '${side}'`);
         }
-        switch (positionX)
+        switch (align)
         {
             case "left":
                 {
@@ -616,7 +616,7 @@ class ColorPicker
                 break;
 
             default:
-                throw new Error(`positionX parameter invalid. It can be: 'left', 'center' or 'right'. Your value: '${positionX}'`);
+                throw new Error(`positionX parameter invalid. It can be: 'left', 'center' or 'right'. Your value: '${align}'`);
         }
     }
 
@@ -800,7 +800,7 @@ class ColorPicker
             default:
                 break;
         }
-        this.closeMenu();
+        this.close();
     }
     private inputs(input: "colorH" | "colorS" | "colorL" | "colorHRange" | "changed")
     {
@@ -833,7 +833,7 @@ class ColorPicker
         }
     }
 
-    private openMenu()
+    private open()
     {
         if (!this.isOpen)
         {
@@ -868,7 +868,7 @@ class ColorPicker
             this.fireEvent("colorPicker-reopened")
         }
     }
-    private closeMenu()
+    private close()
     {
         if (this.isOpen)
         {
@@ -903,7 +903,7 @@ class ColorPicker
             const x = e.pageX;
             if (!this.clickIntersect(x, y))
             {
-                this.closeMenu();
+                this.close();
             }
         }
     }

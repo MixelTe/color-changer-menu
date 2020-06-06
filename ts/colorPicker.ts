@@ -594,10 +594,10 @@ class ColorPicker
         {
             case "up":
                 {
-                    let newY = rect.y - this.height;
+                    let newY = rect.y - this.height - parseInt(this.menuWindow.style.borderWidth)*2;
                     if (!strict && newY < 0)
                     {
-                        newY = rect.y + rect.height;
+                        newY = rect.y + rect.height + parseInt(this.menuWindow.style.borderWidth)*2;
                     }
                     this.Y = newY
                     this.menuWindow.style.top = newY + "px";
@@ -606,10 +606,10 @@ class ColorPicker
 
             case "down":
                 {
-                    let newY = rect.y + rect.height;
+                    let newY = rect.y + rect.height + parseInt(this.menuWindow.style.borderWidth)*2;
                     if (!strict && newY + this.height > document.body.offsetHeight && rect.y - this.height > 0)
                     {
-                        newY = rect.y - this.height;
+                        newY = rect.y - this.height - parseInt(this.menuWindow.style.borderWidth)*2;
                     }
                     this.Y = newY
                     this.menuWindow.style.top = newY + "px";

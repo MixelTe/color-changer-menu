@@ -5,10 +5,10 @@ type EventNames = "colorPicker-input" | "colorPicker-changed" | "colorPicker-can
 
 interface Options
 {
-    buttonOk?: { background?: string, text?: string };
-    buttonCancel?: { background?: string, text?: string };
-    window?: { background?: string, text?: string };
-    inputs?: { background?: string, text?: string };
+    buttonOk?: { background?: string, text?: string, borderColor?: string, borderWidth?: number };
+    buttonCancel?: { background?: string, text?: string, borderColor?: string, borderWidth?: number };
+    window?: { background?: string, text?: string, borderColor?: string, borderWidth?: number };
+    inputs?: { background?: string, text?: string, borderColor?: string, borderWidth?: number };
     roundCorners?: boolean;
     pickedColorBackground?: boolean;
     pickedColorBorder?: boolean;
@@ -62,7 +62,6 @@ class ColorPicker
     private firstClick = false;
     private isOpen = false;
     private colorIsChanging = false;
-    private rounded = true;
     private changeBackground = false;
     private changeBorder = false;
     private segWidth = 3;
@@ -288,6 +287,7 @@ class ColorPicker
 
             this.closeButton = document.createElement("div");
             this.closeButton.style.borderRadius = "7px 0px 0px 7px";
+            this.closeButton.style.boxSizing = "border-box";
             this.closeButton.style.backgroundColor = "red";
             this.closeButton.style.border = "1px solid black";
             this.closeButton.style.borderRightWidth = "0px";
@@ -300,6 +300,7 @@ class ColorPicker
 
             this.okButton = document.createElement("div");
             this.okButton.style.borderRadius = "0px 7px 7px 0px";
+            this.okButton.style.boxSizing = "border-box";
             this.okButton.style.backgroundColor = "green";
             this.okButton.style.color = "black";
             this.okButton.style.border = "1px solid black";
@@ -485,6 +486,15 @@ class ColorPicker
             {
                 this.okButton.style.backgroundColor = options.buttonOk.background;
             }
+            if (options.buttonOk.borderColor != null)
+            {
+                this.okButton.style.borderColor = options.buttonOk.borderColor;
+            }
+            if (options.buttonOk.borderWidth != null)
+            {
+                const w = options.buttonOk.borderWidth;
+                this.okButton.style.borderRadius = `0px ${w}px ${w}px 0px`;
+            }
         }
         if (options.buttonCancel != null)
         {
@@ -500,6 +510,15 @@ class ColorPicker
                 this.closeButton.style.backgroundImage = "url()";
                 this.closeButton.style.backgroundImage = this.drawCloseButton();
             }
+            if (options.buttonCancel.borderColor != null)
+            {
+                this.closeButton.style.borderColor = options.buttonCancel.borderColor;
+            }
+            if (options.buttonCancel.borderWidth != null)
+            {
+                const w = options.buttonCancel.borderWidth;
+                this.closeButton.style.borderRadius = `${w}px 0px 0px ${w}px`;
+            }
         }
         if (options.window != null)
         {
@@ -510,6 +529,14 @@ class ColorPicker
             if (options.window.background != null)
             {
                 this.menuWindow.style.backgroundColor = options.window.background;
+            }
+            if (options.window.borderColor != null)
+            {
+                this.menuWindow.style.borderColor = options.window.borderColor;
+            }
+            if (options.window.borderWidth != null)
+            {
+                this.menuWindow.style.borderWidth = options.window.borderWidth + "px";
             }
         }
         if (options.inputs != null)
@@ -525,6 +552,18 @@ class ColorPicker
                 this.inputH.style.backgroundColor = options.inputs.background;
                 this.inputL.style.backgroundColor = options.inputs.background;
                 this.inputS.style.backgroundColor = options.inputs.background;
+            }
+            if (options.inputs.borderColor != null)
+            {
+                this.inputH.style.borderColor = options.inputs.borderColor;
+                this.inputL.style.borderColor = options.inputs.borderColor;
+                this.inputS.style.borderColor = options.inputs.borderColor;
+            }
+            if (options.inputs.borderWidth != null)
+            {
+                this.inputH.style.borderWidth = options.inputs.borderWidth + "px";
+                this.inputL.style.borderWidth = options.inputs.borderWidth + "px";
+                this.inputS.style.borderWidth = options.inputs.borderWidth + "px";
             }
         }
     }

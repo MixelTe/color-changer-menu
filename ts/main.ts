@@ -45,6 +45,7 @@ colorPicker.setStyle({
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
-    const rect = { x: this.offsetLeft, y: this.offsetTop, width: this.offsetWidth - 6, height: this.offsetHeight + 5 };
+    const rect = this.getBoundingClientRect();
     colorPicker.openMenu(rect);
 }
+

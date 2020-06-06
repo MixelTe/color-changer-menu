@@ -23,16 +23,20 @@ const colorPicker = new ColorPicker();
 // colorPicker.styleColors("inputs", "background", "rgb(100, 100, 100)");
 // colorPicker.styleWindow("pickedColorBorder", true);
 // colorPicker.setColorHSL(200, 100, 50);
+function logIt(e:MyEvent)
+{
+    console.log(e.eventName, e);
+}
 
-colorPicker.menuWindow.addEventListener("colorPicker-opened", (e) => console.log((<CustomEvent>e).detail));
-colorPicker.menuWindow.addEventListener("colorPicker-reopened", (e) => console.log((<CustomEvent>e).detail));
-colorPicker.menuWindow.addEventListener("colorPicker-closed", (e) => console.log((<CustomEvent>e).detail));
+// colorPicker.addEventListener("colorPicker-opened", logIt);
+// colorPicker.addEventListener("colorPicker-reopened", logIt);
+// colorPicker.addEventListener("colorPicker-closed", logIt);
+// colorPicker.addEventListener("colorPicker-input", logIt);
+// colorPicker.addEventListener("colorPicker-changed", logIt);
+// colorPicker.addEventListener("colorPicker-canceled", logIt);
+// colorPicker.addEventListener("colorPicker-confirmed", logIt);
 
-colorPicker.menuWindow.addEventListener("colorPicker-input", (e) => console.log((<CustomEvent>e).detail));
-colorPicker.menuWindow.addEventListener("colorPicker-changed", (e) => console.log((<CustomEvent>e).detail));
-
-colorPicker.menuWindow.addEventListener("colorPicker-canceled", (e) => console.log((<CustomEvent>e).detail));
-colorPicker.menuWindow.addEventListener("colorPicker-confirmed", (e) => console.log((<CustomEvent>e).detail));
+// colorPicker.removeEventListener("colorPicker-opened", logIt);
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {

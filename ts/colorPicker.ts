@@ -6,7 +6,7 @@ type EventNames = "colorPicker-input" | "colorPicker-changed" | "colorPicker-can
 class ColorPicker
 {
 
-    public menuWindow: HTMLDivElement;
+    private menuWindow: HTMLDivElement;
 
     private menuTop: HTMLDivElement;
 
@@ -58,6 +58,9 @@ class ColorPicker
     private colorH = 0;
     private colorS = 100;
     private colorL = 50;
+
+    private eventsMap = new Map();
+
 
     constructor()
     {
@@ -327,6 +330,14 @@ class ColorPicker
         this.inputH.value = `${this.colorH}`;
         this.inputS.value = `${this.colorS}`;
         this.inputL.value = `${this.colorL}`;
+
+        this.eventsMap.set("colorPicker-input", []);
+        this.eventsMap.set("colorPicker-changed", []);
+        this.eventsMap.set("colorPicker-canceled", []);
+        this.eventsMap.set("colorPicker-confirmed", []);
+        this.eventsMap.set("colorPicker-opened", []);
+        this.eventsMap.set("colorPicker-reopened", []);
+        this.eventsMap.set("colorPicker-closed", []);
     }
     public openMenu_OnCursor(e: MouseEvent)
     {
@@ -685,9 +696,9 @@ class ColorPicker
     }
     private displayColor()
     {
-        this.curColorDiv.style.backgroundColor = this.getColor();
-        if (this.changeBackground) this.menuWindow.style.backgroundColor = this.getColor();
-        if (this.changeBorder) this.menuWindow.style.borderColor = this.getColor();
+        this.curColorDiv.style.backgroundColor = this.getHSLColor();
+        if (this.changeBackground) this.menuWindow.style.backgroundColor = this.getHSLColor();
+        if (this.changeBorder) this.menuWindow.style.borderColor = this.getHSLColor();
     }
     private calculateNewCurCords()
     {
@@ -890,6 +901,83 @@ class ColorPicker
         );
     }
 
+
+    public addEventListener(eventName: EventNames, f: (d:MyEvent) => void)
+    {
+        switch (eventName)
+        {
+            case "colorPicker-input":
+            case "colorPicker-changed":
+            case "colorPicker-canceled":
+            case "colorPicker-confirmed":
+            case "colorPicker-opened":
+            case "colorPicker-reopened":
+            case "colorPicker-closed":
+                break;
+            default: throw new Error(`Unexpected value: ${eventName}`);
+        }
+        let curentListenersFunctions = this.eventsMap.get(eventName);
+        curentListenersFunctions[curentListenersFunctions.length] = f;
+        this.eventsMap.set(eventName, curentListenersFunctions);
+    }
+    public removeEventListener(eventName: EventNames, f: (d:MyEvent) => void)
+    {
+        switch (eventName)
+        {
+            case "colorPicker-input":
+            case "colorPicker-changed":
+            case "colorPicker-canceled":
+            case "colorPicker-confirmed":
+            case "colorPicker-opened":
+            case "colorPicker-reopened":
+            case "colorPicker-closed":
+                break;
+            default: throw new Error(`Unexpected value: ${eventName}`);
+        }
+        let eventListenersFunctions = this.eventsMap.get(eventName);
+        for (let i = 0; i < eventListenersFunctions.length; i++)
+        {
+            if (eventListenersFunctions[i] == f)
+            {
+                eventListenersFunctions.splice(i, 1);
+                i = eventListenersFunctions.length + 1;
+            }
+        }
+        this.eventsMap.set(eventName, eventListenersFunctions);
+    }
+    private fireEvent(eventName: EventNames)
+    {
+        const detail = this.createEventDetail(eventName);
+        let curentListenersFunctions = this.eventsMap.get(eventName);
+        curentListenersFunctions.forEach((el: (d:any) => void) => { el(detail); });
+        // const e = new CustomEvent(eventName, { detail });
+        // this.menuWindow.dispatchEvent(e);
+    }
+    private createEventDetail(eventName: EventNames)
+    {
+        switch (eventName)
+        {
+            case "colorPicker-input":
+            case "colorPicker-changed":
+            case "colorPicker-canceled":
+            case "colorPicker-confirmed":
+            case "colorPicker-closed":
+                return this.getEventData(eventName);
+
+            case "colorPicker-opened":
+            case "colorPicker-reopened":
+                return { x: this.X, y: this.Y, eventName };
+
+            default: throw new Error(`Unexpected value: ${eventName}`);
+        }
+    }
+    private fireEvent_(eventName: EventNames)
+    {
+        const detail = this.createEventDetail(eventName);
+        const e = new CustomEvent(eventName, { detail });
+        this.menuWindow.dispatchEvent(e);
+    }
+
     private drawCloseButton(back?: string, front?: string)
     {
         {
@@ -919,44 +1007,21 @@ class ColorPicker
             return 'url(' + canva.toDataURL("image/png") + ')';
         }
     }
-    private fireEvent(eventName: EventNames)
-    {
-        const detail = this.createEventDetail(eventName);
-        const e = new CustomEvent(eventName, { detail });
-        this.menuWindow.dispatchEvent(e);
-    }
-    private createEventDetail(eventName: EventNames)
-    {
-        switch (eventName)
-        {
-            case "colorPicker-input":
-            case "colorPicker-changed":
-            case "colorPicker-canceled":
-            case "colorPicker-confirmed":
-                return this.getEventData();
-
-            case "colorPicker-opened":
-            case "colorPicker-reopened":
-                return { x: this.X, y: this.Y };
-
-            case "colorPicker-closed":
-                return null;
-
-            default: throw new Error(`Unexpected value: ${eventName}`);
         }
     }
-    private getEventData()
+    private getEventData(eventName: EventNames)
     {
         const rgb = this.HSLToRGB(this.colorH, this.colorH, this.colorL);
         return {
             h: this.colorH,
             s: this.colorH,
             l: this.colorL,
-            colorHSL: this.getColor(),
+            colorHSL: this.getHSLColor(),
             r: rgb[0],
             g: rgb[1],
             b: rgb[2],
-            colorRBG: `rbg(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`
+            colorRBG: `rbg(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`,
+            eventName
         };
     }
     private RGBToHSL(r: number, g: number, b: number)
@@ -1016,4 +1081,18 @@ interface Rect
     y: number;
     width: number;
     height: number;
+}
+interface MyEvent
+{
+    x?: number;
+    y?: number;
+    h?: number;
+    s?: number;
+    l?: number;
+    colorHSL?: string;
+    r?: number;
+    g?: number;
+    b?: number;
+    colorRBG?: string;
+    eventName: EventNames;
 }

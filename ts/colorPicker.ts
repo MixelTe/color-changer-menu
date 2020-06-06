@@ -1,7 +1,7 @@
 type PosY = "up" | "down";
 type PosX = "left" | "center" | "right";
 
-type EventNames = "colorPicker-input" | "colorPicker-changed" | "colorPicker-canceled" | "colorPicker-confirmed" | "colorPicker-opened" | "colorPicker-closed" | "colorPicker-reopened";
+type EventNames = "input" | "changed" | "canceled" | "confirmed" | "opened" | "closed" | "reopened";
 
 interface Options
 {
@@ -800,21 +800,21 @@ class ColorPicker
             case "down":
                 this.colorIsChanging = true;
                 this.canvaClick(e);
-                this.fireEvent("colorPicker-changed");
+                this.fireEvent("changed");
                 // console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 break;
             case "move":
                 if (this.colorIsChanging)
                 {
                     this.canvaClick(e);
-                    this.fireEvent("colorPicker-input");
+                    this.fireEvent("input");
                     // console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 }
                 break;
             case "up":
                 if (this.colorIsChanging)
                 {
-                    this.fireEvent("colorPicker-changed");
+                    this.fireEvent("changed");
                     // console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 }
                 this.colorIsChanging = false;
@@ -826,11 +826,11 @@ class ColorPicker
         switch (button)
         {
             case "cancel":
-                this.fireEvent("colorPicker-canceled");
+                this.fireEvent("canceled");
                 // console.log("user press cancel button");
                 break;
             case "ok":
-                this.fireEvent("colorPicker-confirmed");
+                this.fireEvent("confirmed");
                 // console.log("user press ok button");
                 break;
             default:
@@ -859,12 +859,12 @@ class ColorPicker
         }
         if (input == "changed")
         {
-            this.fireEvent("colorPicker-changed");
+            this.fireEvent("changed");
             // console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
         }
         else
         {
-            this.fireEvent("colorPicker-input");
+            this.fireEvent("input");
             // console.log(`color input: h:${this.colorH} s:${this.colorS} l:${this.colorL}`)
         }
     }
@@ -896,12 +896,12 @@ class ColorPicker
             this.cursor.addEventListener("mousemove", this.canvaMoveHandler);
             document.addEventListener("mouseup", this.canvaUpHandler);
 
-            this.fireEvent("colorPicker-opened")
+            this.fireEvent("opened")
             // console.log("color picker open");
         }
         else
         {
-            this.fireEvent("colorPicker-reopened")
+            this.fireEvent("reopened")
         }
     }
     private close()
@@ -923,7 +923,7 @@ class ColorPicker
             this.cursor.removeEventListener("mousemove", this.canvaMoveHandler);
             document.removeEventListener("mouseup", this.canvaUpHandler);
 
-            this.fireEvent("colorPicker-closed")
+            this.fireEvent("closed")
             // console.log("color picker closed");
         }
     }
@@ -958,13 +958,13 @@ class ColorPicker
     {
         switch (eventName)
         {
-            case "colorPicker-input":
-            case "colorPicker-changed":
-            case "colorPicker-canceled":
-            case "colorPicker-confirmed":
-            case "colorPicker-opened":
-            case "colorPicker-reopened":
-            case "colorPicker-closed":
+            case "input":
+            case "changed":
+            case "canceled":
+            case "confirmed":
+            case "opened":
+            case "reopened":
+            case "closed":
                 break;
             default: throw new Error(`Unexpected value: ${eventName}`);
         }
@@ -982,13 +982,13 @@ class ColorPicker
     {
         switch (eventName)
         {
-            case "colorPicker-input":
-            case "colorPicker-changed":
-            case "colorPicker-canceled":
-            case "colorPicker-confirmed":
-            case "colorPicker-opened":
-            case "colorPicker-reopened":
-            case "colorPicker-closed":
+            case "input":
+            case "changed":
+            case "canceled":
+            case "confirmed":
+            case "opened":
+            case "reopened":
+            case "closed":
                 break;
             default: throw new Error(`Unexpected value: ${eventName}`);
         }
@@ -1012,17 +1012,18 @@ class ColorPicker
     }
     private createEventDetail(eventName: EventNames)
     {
+
         switch (eventName)
         {
-            case "colorPicker-input":
-            case "colorPicker-changed":
-            case "colorPicker-canceled":
-            case "colorPicker-confirmed":
-            case "colorPicker-closed":
+            case "input":
+            case "changed":
+            case "canceled":
+            case "confirmed":
+            case "closed":
                 return this.getEventData(eventName);
 
-            case "colorPicker-opened":
-            case "colorPicker-reopened":
+            case "opened":
+            case "reopened":
                 return { x: this.X, y: this.Y, eventName };
 
             default: throw new Error(`Unexpected value: ${eventName}`);

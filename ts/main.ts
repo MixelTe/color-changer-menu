@@ -25,24 +25,23 @@ const colorPicker = new ColorPicker();
 //     console.log(e.eventName, e);
 // }
 
-// colorPicker.addEventListener("colorPicker-opened", logIt);
-// colorPicker.addEventListener("colorPicker-reopened", logIt);
-// colorPicker.addEventListener("colorPicker-closed", logIt);
-// colorPicker.addEventListener("colorPicker-input", logIt);
-// colorPicker.addEventListener("colorPicker-changed", logIt);
-// colorPicker.addEventListener("colorPicker-canceled", logIt);
-// colorPicker.addEventListener("colorPicker-confirmed", logIt);
+// colorPicker.addEventListener("opened", logIt);
+// colorPicker.addEventListener("reopened", logIt);
+// colorPicker.addEventListener("closed", logIt);
+// colorPicker.addEventListener("input", logIt);
+// colorPicker.addEventListener("changed", logIt);
+// colorPicker.addEventListener("canceled", logIt);
+// colorPicker.addEventListener("confirmed", logIt);
 
 // colorPicker.removeEventListener("colorPicker-opened", logIt);
 
-const options = {
+colorPicker.setStyle({
     buttonOk: { background: "#00d93d" },
     buttonCancel: { text: "hsl(303, 100%, 27%)"  },
     window: { background: "black", text: "white", borderWidth: 6 },
     inputs: { background: "rgb(115, 115, 115)", text: "white", borderColor: "orange" },
-    pickedColorBorder: true
-}
-colorPicker.setStyle(options);
+    pickedColorBorder: true,
+});
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {

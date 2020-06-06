@@ -14,6 +14,8 @@ interface Options
     pickedColorBorder?: boolean;
 }
 
+type ColorPickerEventHandler = (e: MyEvent) => void;
+
 class ColorPicker
 {
 
@@ -73,7 +75,7 @@ class ColorPicker
     private placement_align: PosX = "left";
     private placement_strict = false;
 
-    private eventsMap = new Map();
+	private eventsMap = new Map<EventNames, ColorPickerEventHandler[]>();
 
 
     constructor(options: Options = {})
@@ -345,14 +347,6 @@ class ColorPicker
         this.inputH.value = `${this.colorH}`;
         this.inputS.value = `${this.colorS}`;
         this.inputL.value = `${this.colorL}`;
-
-        this.eventsMap.set("colorPicker-input", []);
-        this.eventsMap.set("colorPicker-changed", []);
-        this.eventsMap.set("colorPicker-canceled", []);
-        this.eventsMap.set("colorPicker-confirmed", []);
-        this.eventsMap.set("colorPicker-opened", []);
-        this.eventsMap.set("colorPicker-reopened", []);
-        this.eventsMap.set("colorPicker-closed", []);
 
         this.setStyle(options);
     }
@@ -974,11 +968,17 @@ class ColorPicker
                 break;
             default: throw new Error(`Unexpected value: ${eventName}`);
         }
-        let curentListenersFunctions = this.eventsMap.get(eventName);
-        curentListenersFunctions[curentListenersFunctions.length] = f;
-        this.eventsMap.set(eventName, curentListenersFunctions);
+
+		let curentListenersFunctions = this.eventsMap.get(eventName);
+		if (curentListenersFunctions == null)
+		{
+			curentListenersFunctions = [];
+			this.eventsMap.set(eventName, curentListenersFunctions);
+		}
+		curentListenersFunctions.push(f);
+
     }
-    public removeEventListener(eventName: EventNames, f: (d:MyEvent) => void)
+    public removeEventListener(eventName: EventNames, f: (d: MyEvent) => void)
     {
         switch (eventName)
         {
@@ -992,22 +992,21 @@ class ColorPicker
                 break;
             default: throw new Error(`Unexpected value: ${eventName}`);
         }
-        let eventListenersFunctions = this.eventsMap.get(eventName);
-        for (let i = 0; i < eventListenersFunctions.length; i++)
+        const curentListenersFunctions = this.eventsMap.get(eventName);
+        if (curentListenersFunctions != null)
         {
-            if (eventListenersFunctions[i] == f)
-            {
-                eventListenersFunctions.splice(i, 1);
-                i = eventListenersFunctions.length + 1;
-            }
+            const index = curentListenersFunctions.indexOf(f);
+            if (index >= 0) curentListenersFunctions.splice(index, 1);
         }
-        this.eventsMap.set(eventName, eventListenersFunctions);
     }
     private fireEvent(eventName: EventNames)
     {
-        const detail = this.createEventDetail(eventName);
         let curentListenersFunctions = this.eventsMap.get(eventName);
-        curentListenersFunctions.forEach((el: (d:any) => void) => { el(detail); });
+        if (curentListenersFunctions != null && curentListenersFunctions.length > 0)
+        {
+            const detail = this.createEventDetail(eventName);
+            curentListenersFunctions.forEach(handler => handler(detail));
+        }
         // const e = new CustomEvent(eventName, { detail });
         // this.menuWindow.dispatchEvent(e);
     }

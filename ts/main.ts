@@ -11,7 +11,7 @@
 
 document.body.querySelectorAll("button")
 	.forEach(el =>
-	{
+    {
 		el.addEventListener("click", btnClick);
 	});
 

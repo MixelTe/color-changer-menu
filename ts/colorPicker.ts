@@ -12,6 +12,7 @@ interface Options
     roundCorners?: boolean;
     pickedColorBackground?: boolean;
     pickedColorBorder?: boolean;
+    zIndex?: number;
 }
 
 type ColorPickerEventHandler = (e:  Coordinate | Color) => void;
@@ -93,6 +94,7 @@ class ColorPicker
         this.menuWindow.style.position = "absolute";
         this.menuWindow.style.left = "40px";
         this.menuWindow.style.top = "40px";
+        this.menuWindow.style.zIndex = "10000000";
 
 
 
@@ -469,6 +471,10 @@ class ColorPicker
         if (typeof options.pickedColorBorder == "boolean")
         {
             this.changeBorder = options.pickedColorBorder;
+        }
+        if (typeof options.zIndex == "number")
+        {
+            this.menuWindow.style.zIndex = `${options.zIndex}`;
         }
         if (options.buttonOk != null)
         {

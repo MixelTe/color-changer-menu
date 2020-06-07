@@ -48,16 +48,7 @@ class ColorPicker
     private Y = 0;
     private clickHandler = this.isInFocus.bind(this);
     private closeHandler = this.close.bind(this);
-    private buttonCancelHandler = this.buttonsClick.bind(this, "cancel");
-    private buttonOkHandler = this.buttonsClick.bind(this, "ok");
-    private colorHRHandler = this.inputs.bind(this, "colorHRange");
-    private colorHIHandler = this.inputs.bind(this, "colorH");
-    private colorSHandler = this.inputs.bind(this, "colorS");
-    private colorLHandler = this.inputs.bind(this, "colorL");
-    private colorChangedHandler = this.inputs.bind(this, "changed");
     private canvaUpHandler = this.canvaMouse.bind(this, "up");
-    private canvaMoveHandler = this.canvaMouse.bind(this, "move");
-    private canvaDownHandler = this.canvaMouse.bind(this, "down");
     private ctx: CanvasRenderingContext2D;
     private ctxCursor: CanvasRenderingContext2D;
     private cursorX = 0;
@@ -77,7 +68,7 @@ class ColorPicker
     private placement_strict = false;
 
 	private eventsMap = new Map<EventNames, ColorPickerEventHandler[]>();
-
+    private resolve: ((result: Color | undefined) => void) | undefined;
 
     constructor(options: Options = {})
     {
@@ -567,6 +558,25 @@ class ColorPicker
             }
         }
     }
+    public pick(rect: Rect, side?: PosY, align?: PosX, strict?: boolean)
+    {
+        return new Promise<Color | undefined>((resolve, reject) =>
+        {
+            this.resolve = resolve;
+
+            this.openMenu(rect, side, align, strict);
+        });
+    }
+    public pick_onCursor(e: MouseEvent)
+    {
+        return new Promise<Color | undefined>((resolve, reject) =>
+        {
+            this.resolve = resolve;
+
+            this.openMenu_onCursor(e);
+        });
+    }
+
     private moveMenuToCursor(e: MouseEvent)
     {
         const pY = e.pageY;
@@ -833,23 +843,28 @@ class ColorPicker
                 break;
         }
     }
-    private buttonsClick(button: "cancel" | "ok")
+    private buttonClickCancel()
     {
-        switch (button)
-        {
-            case "cancel":
-                this.fireEvent("canceled");
-                // console.log("user press cancel button");
-                break;
-            case "ok":
-                this.fireEvent("confirmed");
-                // console.log("user press ok button");
-                break;
-            default:
-                break;
-        }
+
+        this.fireEvent("canceled");
         this.close();
+        this.setPromiseResult(undefined);
     }
+    private buttonClickOk()
+    {
+        this.fireEvent("confirmed");
+        this.close();
+        this.setPromiseResult(this.getColor());
+    }
+    private setPromiseResult(color: Color | undefined)
+    {
+        if (this.resolve != null)
+        {
+            this.resolve(color);
+            this.resolve = undefined;
+        }
+    }
+
     private inputs(input: "colorH" | "colorS" | "colorL" | "colorHRange" | "changed")
     {
         switch (input)
@@ -892,20 +907,20 @@ class ColorPicker
             document.addEventListener("click", this.clickHandler);
             window.addEventListener("resize", this.closeHandler);
 
-            this.closeButton.addEventListener("click", this.buttonCancelHandler);
-            this.okButton.addEventListener("click", this.buttonOkHandler);
+            this.closeButton.addEventListener("click", this.buttonClickCancel);
+            this.okButton.addEventListener("click", this.buttonClickOk);
 
-            this.rangeInputH.addEventListener("input", this.colorHRHandler);
-            this.inputH.addEventListener("input", this.colorHIHandler);
-            this.inputS.addEventListener("input", this.colorSHandler);
-            this.inputL.addEventListener("input", this.colorLHandler);
-            this.rangeInputH.addEventListener("change", this.colorChangedHandler);
-            this.inputH.addEventListener("change", this.colorChangedHandler);
-            this.inputS.addEventListener("change", this.colorChangedHandler);
-            this.inputL.addEventListener("change", this.colorChangedHandler);
+            this.rangeInputH.addEventListener("input", () => this.inputs("colorHRange"));
+            this.inputH.addEventListener("input", () => this.inputs("colorH"));
+            this.inputS.addEventListener("input", () => this.inputs("colorS"));
+            this.inputL.addEventListener("input", () => this.inputs("colorL"));
+            this.rangeInputH.addEventListener("change", () => this.inputs("changed"));
+            this.inputH.addEventListener("change",  () => this.inputs("changed"));
+            this.inputS.addEventListener("change",  () => this.inputs("changed"));
+            this.inputL.addEventListener("change",  () => this.inputs("changed"));
 
-            this.cursor.addEventListener("mousedown", this.canvaDownHandler);
-            this.cursor.addEventListener("mousemove", this.canvaMoveHandler);
+            this.cursor.addEventListener("mousedown", (e) => this.canvaMouse("up", e));
+            this.cursor.addEventListener("mousemove", (e) => this.canvaMouse("move", e));
             document.addEventListener("mouseup", this.canvaUpHandler);
 
             this.fireEvent("opened")
@@ -923,16 +938,7 @@ class ColorPicker
             this.isOpen = false;
             this.menuWindow.parentElement?.removeChild(this.menuWindow);
             document.removeEventListener("click", this.clickHandler);
-            this.closeButton.removeEventListener("click", this.buttonCancelHandler);
-            this.okButton.removeEventListener("click", this.buttonOkHandler);
             window.removeEventListener("resize", this.closeHandler);
-            this.rangeInputH.removeEventListener("input", this.colorHRHandler);
-            this.inputH.removeEventListener("input", this.colorHIHandler);
-            this.inputS.removeEventListener("input", this.colorSHandler);
-            this.inputL.removeEventListener("input", this.colorLHandler);
-            this.cursor.removeEventListener("mouseup", this.canvaUpHandler);
-            this.cursor.removeEventListener("mousedown", this.canvaDownHandler);
-            this.cursor.removeEventListener("mousemove", this.canvaMoveHandler);
             document.removeEventListener("mouseup", this.canvaUpHandler);
 
             this.fireEvent("closed")
@@ -1158,5 +1164,4 @@ interface Color
     g: number;
     b: number;
     colorRBG: string;
-    eventName: EventNames;
 }

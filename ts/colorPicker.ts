@@ -632,7 +632,7 @@ class ColorPicker
                     let newX = rect.x;
                     if (!strict && newX > document.body.offsetWidth - this.width)
                     {
-                        newX = rect.x + rect.width - this.width;
+                        newX = rect.x + rect.width - this.width - parseInt(this.menuWindow.style.borderWidth, 10)*2;
                     }
                     this.X = newX
                     this.menuWindow.style.left = newX + "px";
@@ -653,7 +653,7 @@ class ColorPicker
 
             case "right":
                 {
-                    let newX = rect.x + rect.width - this.width;
+                    let newX = rect.x + rect.width - this.width - parseInt(this.menuWindow.style.borderWidth, 10)*2;
                     if (!strict && newX < document.body.offsetLeft)
                     {
                         newX = rect.x;

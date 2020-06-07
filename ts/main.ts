@@ -46,6 +46,8 @@ const colorPicker = new ColorPicker();
 function btnClick(this: HTMLElement, e: MouseEvent)
 {
     const rect = this.getBoundingClientRect();
+    rect.x  += window.pageXOffset;
+    rect.y  += window.pageYOffset;
     colorPicker.openMenu(rect);
 }
 

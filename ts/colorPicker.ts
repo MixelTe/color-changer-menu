@@ -352,7 +352,7 @@ class ColorPicker
 
         this.setStyle(options);
     }
-    public openMenu_OnCursor(e: MouseEvent)
+    public openMenu_onCursor(e: MouseEvent)
     {
         this.moveMenuToCursor(e);
         this.open();
@@ -572,14 +572,20 @@ class ColorPicker
         const pY = e.pageY;
         const cY = e.clientY;
         const dY = pY - cY;
-        let newY = Math.max(pY - this.height - 16, dY + 10);
+        let newY = pY - this.height - parseInt(this.menuWindow.style.borderWidth, 10)*2;
+        if (newY < dY + 10)
+        {
+            newY = pY;
+        }
         this.Y = newY
         this.menuWindow.style.top = newY + "px";
 
         const pX = e.pageX;
         const cX = e.clientX;
         const dX = pX - cX;
-        let newX = Math.max(Math.min(pX - this.width / 2, window.innerWidth + dX - this.width - 30), 10);
+        let newX = pX - this.width / 2;
+        const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+        newX = Math.max(Math.min(newX, window.innerWidth - scrollBarWidth + dX - this.width - parseInt(this.menuWindow.style.borderWidth, 10)*2), 0 + dX);
         this.X = newX
         this.menuWindow.style.left = newX + "px";
     }

@@ -206,7 +206,7 @@ Resut:
 
 comand              | descripton                     | arguments                             | return
 --------------------|--------------------------------|---------------------------------------|----------------------
-openMenu_OnCursor   | open picker in cursor position | MouseEvent                            |
+openMenu_onCursor   | open picker in cursor position | MouseEvent                            |
 openMenu            | open picker beside some rect   | rect, side(optional), align(optional) |
 setPlacement        | set where picker will appear   | side, align(optional)                 |
 setColorHSL         | set picker color               | h, s, l                               |
@@ -229,13 +229,13 @@ r, g, b             | number(0-256);  number(0-256);  number(0-256)
 ### All options for setStyle
 arguments             | arguments type
 ----------------------|-----------------
-buttonOk              | { background: color, text: color, borderColor: color, borderWidth: number };
-buttonCancel          | { background: color, text: color, borderColor: color, borderWidth: number };
-window                | { background: color, text: color, borderColor: color, borderWidth: number };
-inputs                | { background: color, text: color, borderColor: color, borderWidth: number };
-roundCorners          | boolean;
-pickedColorBackground | boolean;
-pickedColorBorder     | boolean;
+buttonOk              | { background: color, text: color, borderColor: color, borderWidth: number }
+buttonCancel          | { background: color, text: color, borderColor: color, borderWidth: number }
+window                | { background: color, text: color, borderColor: color, borderWidth: number }
+inputs                | { background: color, text: color, borderColor: color, borderWidth: number }
+roundCorners          | boolean
+pickedColorBackground | boolean
+pickedColorBorder     | boolean
 
 color - color value ("rgb(94, 65, 190)", "hsl(70, 91%, 67%)", "blue", "#23ff45")
 

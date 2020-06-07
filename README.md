@@ -36,7 +36,10 @@ btn.addEventListener("click", () => {
     const rect = {x: number, y: number, width: number, height: number}
 
     // if you want to open menu beside HTML element you can get bounding rect of the element
-	//const rect = this.getBoundingClientRect();
+    //const rect = this.getBoundingClientRect();
+    // and translate it to page coordinate
+    // rect.x  += window.pageXOffset;
+    // rect.y  += window.pageYOffset;
 
 	// create new picker
 	const colorPicker = new ColorPicker();
@@ -105,7 +108,10 @@ const btn = document.getElementById("btnChangeColor");
 btn.addEventListener("click", () =>
 {
 	// get bounding rect of btn
-	const rect = this.getBoundingClientRect();
+    const rect = this.getBoundingClientRect();
+    // translate it to page coordinate
+    rect.x  += window.pageXOffset;
+    rect.y  += window.pageYOffset;
 
     colorPicker.openMenu(rect);
 });
@@ -185,6 +191,13 @@ pickedColorBackground:
 
 ![](/docs/menu_backgroundColor.gif)
 
+#### To change window z-index:
+``` js
+options = {
+    zIndex: number
+}
+```
+
 ## working example:
 ``` js
 const options = {
@@ -236,6 +249,7 @@ inputs                | { background: color, text: color, borderColor: color, bo
 roundCorners          | boolean
 pickedColorBackground | boolean
 pickedColorBorder     | boolean
+zIndex                | number
 
 color - color value ("rgb(94, 65, 190)", "hsl(70, 91%, 67%)", "blue", "#23ff45")
 

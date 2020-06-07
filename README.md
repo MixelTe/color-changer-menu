@@ -207,7 +207,7 @@ Resut:
 comand              | descripton                     | arguments                             | return
 --------------------|--------------------------------|---------------------------------------|----------------------
 openMenu_OnCursor   | open picker in cursor position | MouseEvent                            |
-openMenu_AroundRect | open picker beside some rect   | rect, side(optional), align(optional) |
+openMenu            | open picker beside some rect   | rect, side(optional), align(optional) |
 setPlacement        | set where picker will appear   | side, align(optional)                 |
 setColorHSL         | set picker color               | h, s, l                               |
 setColorRGB         | set picker color               | r, g, b                               |

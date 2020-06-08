@@ -44,6 +44,8 @@ btn.addEventListener("click", () => {
 	// create new picker
 	const colorPicker = new ColorPicker();
     colorPicker.openMenu(rect);
+    // or
+    // colorPicker.openMenu_onCoordinates(x, y);
 });
 ```
 Take information from picker
@@ -62,7 +64,13 @@ function anyFunction(e)
     console.log(e);
 }
 ```
-
+or with async function
+``` js
+const color = await colorPicker.pick(rect); //return Color if user press ok button
+// or
+//const color = await colorPicker.pick_onCoordinates(x, y);
+if (color != undefined) newColor = color.colorHSL;
+```
 ### Picker events:
 Event Name | Fired When                  | Data
 -----------|-----------------------------|----------------
@@ -116,7 +124,27 @@ btn.addEventListener("click", () =>
     colorPicker.openMenu(rect);
 });
 ```
+Working example 2
+```js
 
+//create new picker
+const colorPicker = new ColorPicker();
+colorPicker.addEventListener("changed", e =>
+{
+	document.body.style.backgroundColor = e.colorHSL;
+});
+
+// some HTML element on page
+const btn = document.getElementById("btnChangeColor");
+btn.addEventListener("click", (e) =>
+{
+    // get mouse coordinates
+    const x = e.pageX;
+    const y = e.pageY;
+
+    colorPicker.openMenu_onCoordinates(x, y);
+});
+```
 
 #
 ## Picker settings
@@ -141,7 +169,12 @@ colorPicker.setColorRGB(r, g, b);
 #
 ## Style:
 ``` js
+const colorPicker = new ColorPicker(options);
+// or
 colorPicker.setStyle(options);
+
+// to reset:
+//colorPicker.setStyle(colorPicker.baseStyle);
 ```
 
 #### To change color of background, text or border and border width:
@@ -219,8 +252,10 @@ Resut:
 
 comand                 | descripton                     | arguments                             | return
 -----------------------|--------------------------------|---------------------------------------|----------------------
-openMenu_onCoordinates | open picker in cursor position | x, y                                  |
 openMenu               | open picker beside some rect   | rect, side(optional), align(optional) |
+openMenu_onCoordinates | open picker on coordinates     | x, y                                  |
+pick                   | open picker beside some rect   | rect, side(optional), align(optional) | Promise<Color \| undefined> (return result after closing)
+pick_onCoordinates     | open picker on coordinates     | x, y                                  | Promise<Color \| undefined> (return result after closing)
 setPlacement           | set where picker will appear   | side, align(optional)                 |
 setColorHSL            | set picker color               | h, s, l                               |
 setColorRGB            | set picker color               | r, g, b                               |

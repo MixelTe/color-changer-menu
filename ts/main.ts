@@ -42,6 +42,7 @@ const colorPicker = new ColorPicker();
 //     inputs: { background: "rgb(115, 115, 115)", text: "white", borderColor: "orange" },
 //     pickedColorBorder: true,
 // });
+// colorPicker.setStyle(colorPicker.baseStyle);
 
 function btnClick(this: HTMLElement, e: MouseEvent)
 {

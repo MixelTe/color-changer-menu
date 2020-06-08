@@ -66,6 +66,16 @@ class ColorPicker
     private placement_side: PosY = "up";
     private placement_align: PosX = "left";
     private placement_strict = false;
+    public baseStyle = {
+        buttonOk: { background: "green", text: "black", borderColor: "black", borderWidth: 1 },
+        buttonCancel: { background: "red", text: "black", borderColor: "black", borderWidth: 1 },
+        window: { background: "lightgray", text: "black", borderColor: "black", borderWidth: 3 },
+        inputs: { background: "white", text: "black", borderColor: "rgb(118, 118, 118)", borderWidth: 2 },
+        roundCorners: true,
+        pickedColorBackground: false,
+        pickedColorBorder: false,
+        zIndex: 10000000,
+    }
 
 	private eventsMap = new Map<EventNames, ColorPickerEventHandler[]>();
     private resolve: ((result: Color | undefined) => void) | undefined;
@@ -284,6 +294,7 @@ class ColorPicker
             this.closeButton.style.borderRadius = "7px 0px 0px 7px";
             this.closeButton.style.boxSizing = "border-box";
             this.closeButton.style.backgroundColor = "red";
+            this.closeButton.style.color = "black";
             this.closeButton.style.border = "1px solid black";
             this.closeButton.style.borderRightWidth = "0px";
             this.closeButton.style.width = "18px";
@@ -484,7 +495,7 @@ class ColorPicker
             if (options.buttonOk.borderWidth != null)
             {
                 const w = options.buttonOk.borderWidth;
-                this.okButton.style.borderRadius = `0px ${w}px ${w}px 0px`;
+                this.okButton.style.borderWidth = `${w}px ${w}px ${w}px 0px`;
             }
         }
         if (options.buttonCancel != null)
@@ -508,7 +519,7 @@ class ColorPicker
             if (options.buttonCancel.borderWidth != null)
             {
                 const w = options.buttonCancel.borderWidth;
-                this.closeButton.style.borderRadius = `${w}px 0px 0px ${w}px`;
+                this.closeButton.style.borderWidth = `${w}px 0px ${w}px ${w}px`;
             }
         }
         if (options.window != null)

@@ -823,8 +823,6 @@ class ColorPicker
             case "down":
                 this.colorIsChanging = true;
                 this.canvaClick(e);
-                this.fireEvent("changed");
-                // console.log(`color changed: h:${this.colorH} s:${this.colorS} l:${this.colorL}`);
                 break;
             case "move":
                 if (this.colorIsChanging)

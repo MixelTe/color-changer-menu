@@ -37,7 +37,7 @@ btn.addEventListener("click", () => {
 
     // if you want to open menu beside HTML element you can get bounding rect of the element
     //const rect = this.getBoundingClientRect();
-    // and translate it to page coordinate
+    // and translate it to page coordinates
     // rect.x  += window.pageXOffset;
     // rect.y  += window.pageYOffset;
 
@@ -109,7 +109,7 @@ btn.addEventListener("click", () =>
 {
 	// get bounding rect of btn
     const rect = this.getBoundingClientRect();
-    // translate it to page coordinate
+    // translate it to page coordinates
     rect.x  += window.pageXOffset;
     rect.y  += window.pageYOffset;
 

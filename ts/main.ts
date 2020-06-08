@@ -59,6 +59,13 @@ async function changeItsColor(this: HTMLElement, e: MouseEvent)
     // const rect = this.getBoundingClientRect();
     // rect.x  += window.pageXOffset;
     // rect.y  += window.pageYOffset;
-    const color = await colorPicker.pick_onCursor(e);
-    if (color != undefined) this.style.backgroundColor = (<Color>color).colorHSL;
+    try
+    {
+        const color = await colorPicker.pick_onCursor(e);
+        if (color != undefined) this.style.backgroundColor = (<Color>color).colorHSL;
+    }
+    catch (e)
+    {
+        console.error(e);
+    }
 }

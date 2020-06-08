@@ -343,9 +343,9 @@ class ColorPicker
 
         this.setStyle(options);
     }
-    public openMenu_onCursor(e: MouseEvent)
+    public openMenu_onCoordinates(x: number, y: number)
     {
-        this.moveMenuToCursor(e);
+        this.moveMenuToCoordinates(x, y);
         this.open();
     }
     public openMenu(rect: Rect, side?: PosY, align?: PosX, strict?: boolean)
@@ -567,35 +567,25 @@ class ColorPicker
             this.openMenu(rect, side, align, strict);
         });
     }
-    public pick_onCursor(e: MouseEvent)
+    public pick_onCoordinates(x: number, y: number)
     {
         return new Promise<Color | undefined>((resolve, reject) =>
         {
             this.resolve = resolve;
 
-            this.openMenu_onCursor(e);
+            this.openMenu_onCoordinates(x, y);
         });
     }
 
-    private moveMenuToCursor(e: MouseEvent)
+    private moveMenuToCoordinates(x: number, y: number)
     {
-        const pY = e.pageY;
-        const cY = e.clientY;
-        const dY = pY - cY;
-        let newY = pY - this.height - parseInt(this.menuWindow.style.borderWidth, 10)*2;
-        if (newY < dY + 10)
-        {
-            newY = pY;
-        }
+        let newY = y - this.height - parseInt(this.menuWindow.style.borderWidth, 10)*2;
+        if (newY < 0) newY = y;
         this.Y = newY
         this.menuWindow.style.top = newY + "px";
 
-        const pX = e.pageX;
-        const cX = e.clientX;
-        const dX = pX - cX;
-        let newX = pX - this.width / 2;
-        const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
-        newX = Math.max(Math.min(newX, window.innerWidth - scrollBarWidth + dX - this.width - parseInt(this.menuWindow.style.borderWidth, 10)*2), 0 + dX);
+        let newX = x - this.width / 2;
+        newX = Math.max(Math.min(newX, document.body.offsetWidth - this.width - parseInt(this.menuWindow.style.borderWidth, 10)*2), 0);
         this.X = newX
         this.menuWindow.style.left = newX + "px";
     }

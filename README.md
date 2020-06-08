@@ -217,22 +217,22 @@ Resut:
 #
 ## All comands
 
-comand              | descripton                     | arguments                             | return
---------------------|--------------------------------|---------------------------------------|----------------------
-openMenu_onCursor   | open picker in cursor position | MouseEvent                            |
-openMenu            | open picker beside some rect   | rect, side(optional), align(optional) |
-setPlacement        | set where picker will appear   | side, align(optional)                 |
-setColorHSL         | set picker color               | h, s, l                               |
-setColorRGB         | set picker color               | r, g, b                               |
-setStyle            | change picker style            | options                               |
-getColor            | get picker color               |                                       | Color
-addEventListener    | subscribe to event             | eventName, function                   |
-removeEventListener | unsubscribe from event         | eventName, function                   |
+comand                 | descripton                     | arguments                             | return
+-----------------------|--------------------------------|---------------------------------------|----------------------
+openMenu_onCoordinates | open picker in cursor position | x, y                                  |
+openMenu               | open picker beside some rect   | rect, side(optional), align(optional) |
+setPlacement           | set where picker will appear   | side, align(optional)                 |
+setColorHSL            | set picker color               | h, s, l                               |
+setColorRGB            | set picker color               | r, g, b                               |
+setStyle               | change picker style            | options                               |
+getColor               | get picker color               |                                       | Color
+addEventListener       | subscribe to event             | eventName, function                   |
+removeEventListener    | unsubscribe from event         | eventName, function                   |
 
 ##
 arguments           | arguments type
 --------------------|-----------------
-MouseEvent          | MouseEvent
+x, y                | number; number
 rect                | {x: number, y: number, height: number, width: number}
 side                | "up" or "down"
 align               | "left", "center" or "right"

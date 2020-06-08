@@ -907,8 +907,8 @@ class ColorPicker
             document.addEventListener("click", this.clickHandler);
             window.addEventListener("resize", this.closeHandler);
 
-            this.closeButton.addEventListener("click", this.buttonClickCancel);
-            this.okButton.addEventListener("click", this.buttonClickOk);
+            this.closeButton.addEventListener("click", () => this.buttonClickCancel());
+            this.okButton.addEventListener("click", () => this.buttonClickOk());
 
             this.rangeInputH.addEventListener("input", () => this.inputs("colorHRange"));
             this.inputH.addEventListener("input", () => this.inputs("colorH"));
@@ -919,7 +919,7 @@ class ColorPicker
             this.inputS.addEventListener("change",  () => this.inputs("changed"));
             this.inputL.addEventListener("change",  () => this.inputs("changed"));
 
-            this.cursor.addEventListener("mousedown", (e) => this.canvaMouse("up", e));
+            this.cursor.addEventListener("mousedown", (e) => this.canvaMouse("down", e));
             this.cursor.addEventListener("mousemove", (e) => this.canvaMouse("move", e));
             document.addEventListener("mouseup", this.canvaUpHandler);
 
@@ -958,6 +958,7 @@ class ColorPicker
             if (!this.clickIntersect(x, y))
             {
                 this.close();
+                this.setPromiseResult(undefined);
             }
         }
     }

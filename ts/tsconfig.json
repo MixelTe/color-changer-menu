@@ -3,7 +3,8 @@
         "strict": true,
         "target": "ESNext",
         "module": "ESNext",
-        "outDir": "../wwwroot/out",
+		"outDir": "../wwwroot/out",
+		"declaration": true
         // "module": "amd",
         // "outFile": "../wwwroot/out.js"
     }

@@ -1,3 +1,5 @@
+import { ColorPicker } from "./colorPicker";
+
 // document.body.addEventListener("click", function (e: MouseEvent)
 // {
 // 	const el = e.target;
@@ -66,7 +68,7 @@ async function changeItsColor(this: HTMLElement, e: MouseEvent)
     try
     {
         const color = await colorPicker.pick_onCoordinates(x, y);
-        if (color != undefined) this.style.backgroundColor = (<Color>color).colorHSL;
+        if (color != undefined) this.style.backgroundColor = color.colorHSL;
     }
     catch (e)
     {

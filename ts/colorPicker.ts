@@ -17,7 +17,7 @@ interface Options
 
 type ColorPickerEventHandler = (e:  Coordinate | Color) => void;
 
-class ColorPicker
+export class ColorPicker
 {
 
     private menuWindow: HTMLDivElement;

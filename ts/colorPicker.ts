@@ -1,3 +1,7 @@
+/*
+* version 1.0.2
+*/
+
 type PosY = "up" | "down";
 type PosX = "left" | "center" | "right";
 

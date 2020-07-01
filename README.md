@@ -5,13 +5,11 @@
 
 #
 ## How to use it
-Add import for script to html
-
+Use js modules
 ```html
 <head>
-    <script defer src="./colorPicker.js"></script>
     <!-- your code: -->
-    <script defer src="./main.js"></script>
+    <script src="./main.js" type="module"></script>
 ```
 Add this style to html (optional)
 ``` html
@@ -29,6 +27,7 @@ Add this style to html (optional)
 ```
 Write code in your program to use it
 ```js
+import { ColorPicker } from "./colorPicker.js";
 //some HTML element on page
 const btn = document.getElementById("btnChangeColor");
 btn.addEventListener("click", () => {
@@ -103,6 +102,7 @@ colorRBG   | string | picker curent color in **rgb** format: `"rgb(r, g, b)"`
 ## working example:
 
 ```js
+import { ColorPicker } from "./colorPicker.js";
 
 //create new picker
 const colorPicker = new ColorPicker();
@@ -126,6 +126,7 @@ btn.addEventListener("click", () =>
 ```
 Working example 2
 ```js
+import { ColorPicker } from "./colorPicker.js";
 
 //create new picker
 const colorPicker = new ColorPicker();

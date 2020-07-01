@@ -1,4 +1,4 @@
-import { ColorPicker } from "./colorPicker";
+import { ColorPicker } from "./colorPicker.js";
 
 // document.body.addEventListener("click", function (e: MouseEvent)
 // {

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color picker menu</title>
+	<script src="out/main.js" type="module"></script>
+    <style>
+        .ColorPickerHInput::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 10px;
+            height: 25px;
+            border-radius: 4px;
+            background: rgb(85, 85, 85);
+            cursor: pointer;
+        }
+        #one {
+            position: absolute;
+            margin-right: auto;
+            display: block;
+        }
+        #two {
+            margin-left: auto;
+            display: block;
+        }
+        #three {
+            position: absolute;
+            top: 50%;
+            left: 45%;
+            z-index: 2;
+        }
+        #four {
+            position: absolute;
+            top: 10%;
+            left: 45%;
+            z-index: 2;
+        }
+        #five {
+            position: absolute;
+            top: 110%;
+            left: 45%;
+        }
+        #seven {
+            position: absolute;
+            top: 1300px;
+            left: 45%;
+        }
+        #six {
+            position: absolute;
+            top: 1200px;
+            left: 45%;
+        }
+        #divChangecolor {
+            position: absolute;
+            top: 5%;
+            left: 0%;
+            width: 800px;
+            height: 50%;
+            background-color: rgb(68, 122, 124);
+            z-index: 1;
+        }
+    </style>
+</head>
+<body style="background-color: cadetblue; height: 1310px; width: 800px;">
+    <button id="one">Change color</button>
+    <button id="two">Change color</button>
+    <button id="three">Change color</button>
+    <button id="four">Change color</button>
+    <button id="five">Change color</button>
+    <button id="six">Change color</button>
+    <button id="seven">Change color</button>
+    <div id="divChangecolor"></div>
+</body>
+</html>
